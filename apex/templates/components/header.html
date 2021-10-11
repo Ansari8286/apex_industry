@@ -1,0 +1,177 @@
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-start align-items-center">
+
+            <button type="button" id="sidebarCollapse" class="navbar-btn align-items-center">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            {% if request.user.is_staff %}
+            <div class="g2 btn-group mx-lg-3 mx-0 align-items-center">
+                <!-- <form action="" method="GET"> -->
+                <button type="button" url={% url 'Notification_Alert' %} class="btn btn-block btn-light rounded" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" id="noti_alert_button">
+                    
+                    {% if ms_count == '0' %}
+                    <i  class="fa fa-bell" aria-hidden="true"><sup><span class="badge text-light">
+                        
+                        
+                        
+                    </span></sup></i>
+                    {% else %}
+                    <i class="fa fa-bell" aria-hidden="true"><sup><span class="badge text-light bg-danger"> 
+                        
+                        {{ms_count}}
+                        
+                    </span>
+                    </sup>
+
+                </i>
+                    {% endif %}
+            
+                </button>
+                <!-- </form> -->
+                <div class="dropdown-menu mt-1 p-0 dd-notif">
+            
+            
+                    <!-- dropdown notif -->
+                    <div class="card notification dropdn" style="width: 330px;">
+                        <div class="card-header darkbg pb-0 text-center ">
+                            <h5 class="text-center text-white font-weight-bold">
+                                Notification
+                            </h5>
+
+                        </div>
+                        <!-- <div class="modal-dialog" role="document"> -->
+                        <div class="card-content ">
+                            <div class="card-body p-0 py-1" id='notification_div_1'>
+                                
+                                {% for m in ms %}
+                                    {% if m.subject == 'Request Access' %}
+                                        <a class = "notif-link" href="{% url 'user_account' %}">
+                                        <div class="pl-3 pr-2 mb-1 lowstk" style="border-left: #1cad1c 7px solid;">
+                                            <h6 class="subject">{{m.subject}}</h6>
+                                            <span class="message">{{m.text}}</span>
+                                            <!-- <span class="text-danger text-right tablecounts">1</span> -->
+                                            <br>
+                                            <span class="text-secondary">{{m.date}}</span>
+                                        </div>
+                                        </a>
+                                    {% else %}
+                                        {% if m.subject == 'Account Created' %}
+                                        <a class = "notif-link" href="{% url 'user_account' %}">
+                                            <div class="pl-3 pr-2 mb-1 lowstk" style="border-left: #1cad1c 7px solid;">
+                                                    <h6 class="subject">{{m.subject}}</h6>
+                                                    <span class="message">{{m.text}}</span>
+                                                    <!-- <span class="text-danger text-right tablecounts">1</span> -->
+                                                    <br>
+                                                    <span class="text-secondary">{{m.date}}</span>
+                                            </div>
+                                        </a>
+                                        {% else %}
+                                            {% if m.subject == 'Raw Material Alert' %}
+                                            <a class="notif-link" href="{% url 'user_raw_material' %}">
+                                            <div class="pl-3 pr-2 mb-1 lowstk" style='border-left: #db1515 7px solid;'>
+                                                
+                                                <h6 class="subject">{{m.subject}}
+                                                <span class="text-danger text-right tablecounts justify-content-end">{{m.stock_count}}</span></h6>
+                                                <span class="message">{{m.text}}</span>
+                                                <br>
+                                                <span class="text-secondary">{{m.date}}</span>
+                                            
+                                            </div>
+                                            </a>
+                                            {% elif m.subject == 'Essential Stock Alert' %}
+                                                <a class = "notif-link" href="{% url 'user_essential_material' %}">
+                                                <div class="pl-3 pr-2 mb-1 lowstk" style='border-left: #db1515 7px solid;'>
+                                                    
+                                                    <h6 class="subject">{{m.subject}}
+                                                    <span class="text-danger text-right tablecounts justify-content-end">{{m.stock_count}}</span></h6>
+                                                    <span class="message">{{m.text}}</span>
+                                                    <br>
+                                                    <span class="text-secondary">{{m.date}}</span>
+                                                
+                                                </div>
+                                                </a>
+                                            {% elif m.subject == 'Finish Material Alert' %}
+                                                <a class = "notif-link" href="{% url 'user_finished_material' %}">
+                                                <div class="pl-3 pr-2 mb-1 lowstk" style='border-left: #db1515 7px solid;'>
+                                                    
+                                                    <h6 class="subject">{{m.subject}}
+                                                    <span class="text-danger text-right tablecounts justify-content-end">{{m.stock_count}}</span></h6>
+                                                    <span class="message">{{m.text}}</span>
+                                                    <br>
+                                                    <span class="text-secondary">{{m.date}}</span>
+                                                
+                                                </div>
+                                                </a>
+                                            {% elif m.subject == 'Notification Alert' %}
+                                            <!--  -->
+                                                <div class="pl-3 pr-2 mb-1 lowstk" style='border-left: #db1515 7px solid;'>
+                                                    
+                                                    <h6 class="subject">{{m.subject}}
+                                                    <span class="text-danger text-right tablecounts justify-content-end">{{m.stock_count}}</span></h6>
+                                                    <span class="message">{{m.text}}</span>
+                                                    <br>
+                                                    <span class="text-secondary">{{m.date}}</span>
+                                                
+                                                </div>
+                                                
+                                            {% else %}
+                                                
+                                                <div class="pl-3 pr-2 mb-1 lowstk" style='border-left: #db1515 7px solid;'>
+                                                    
+                                                    <h6 class="subject">{{m.subject}}
+                                                    <span class="text-danger text-right tablecounts justify-content-end">{{m.stock_count}}</span></h6>
+                                                    <span class="message">{{m.text}}</span>
+                                                    <br>
+                                                    <span class="text-secondary">{{m.date}}</span>
+                                                
+                                                </div>
+                                                
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                        
+                        <button type="button" class="btn btn-block two-btn" data-toggle="modal"
+                            data-target="#notifModal">
+                            View all Notifications
+                        </button>
+                        <!-- </div> -->
+
+
+
+                    </div>
+                    <!-- dropdown notif -->
+                    
+                </div>
+                
+            </div>
+            {% endif %}
+            
+        </div>
+
+        
+
+        <div class="d-flex justify-content-start">
+            <div class="p-1 flex-grow-1 bd-highlight align-items-center">
+                <!-- admin profile -->
+                <div class="d-flex align-items-end">
+                    
+                    <h6 class="page_head mr-1 mr-lg-4">{{header}}
+                        
+                    </h6>
+                    <img class="rounded-circle img-thumbnail" style="width: px;height: 29px;" alt="img"
+                        src="/static/images/csv.png" data-holder-rendered="true">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>

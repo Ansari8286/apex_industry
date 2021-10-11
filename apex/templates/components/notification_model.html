@@ -1,0 +1,90 @@
+
+<div class="modal fade" id="notifModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLabel">Notifications</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body pl-0" id="tadded_1">
+            {% for m in all_ms %}
+            {% if m.subject == 'Request Access' %}
+            <a class="notif-link" href="{% url 'user_account' %}">
+                <div class="pl-3 mb-1 lowstk" style="border-left: #1cad1c 7px solid;">
+                    <h6>{{m.subject}}</h6>
+                    <span>{{m.text}}</span>
+                    <br>
+                    <span class="text-secondary">{{m.date}}</span>
+                </div>
+            </a>
+            {% else %}
+            {% if m.subject == 'Account Created' %}
+            <a class="notif-link" href="{% url 'user_account' %}">
+                <div class="pl-3 mb-1 lowstk" style="border-left: #1cad1c 7px solid;">
+                    <h6>{{m.subject}}</h6>
+                    <span>{{m.text}}</span>
+                    <br>
+                    <span class="text-secondary">{{m.date}}</span>
+                </div>
+            </a>
+            {% else %}
+            {% if m.subject == 'Raw Material Alert' %}
+            <a class="notif-link" href="{% url 'user_raw_material' %}">
+                <div class="pl-3 mb-1 lowstk" id="tadded">
+                    <h6>{{m.subject}}</h6>
+                    <span>{{m.text}}</span>
+                    <span class="text-danger text-right tablecounts">{{m.stock_count}}</span>
+                    <br>
+                    <span class="text-secondary">{{m.date}}</span>
+                </div>
+            </a>
+            {% elif m.subject == 'Essential Stock Alert' %}
+            <a class="notif-link" href="{% url 'user_essential_material' %}">
+                <div class="pl-3 mb-1 lowstk" id="tadded">
+                    <h6>{{m.subject}}</h6>
+                    <span>{{m.text}}</span>
+                    <span class="text-danger text-right tablecounts">{{m.stock_count}}</span>
+                    <br>
+                    <span class="text-secondary">{{m.date}}</span>
+                </div>
+            </a>
+            {% elif m.subject == 'Finish Material Alert' %}
+            <a class="notif-link" href="{% url 'user_finished_material' %}">
+                <div class="pl-3 mb-1 lowstk" id="tadded">
+                    <h6>{{m.subject}}</h6>
+                    <span>{{m.text}}</span>
+                    <span class="text-danger text-right tablecounts">{{m.stock_count}}</span>
+                    <br>
+                    <span class="text-secondary">{{m.date}}</span>
+                </div>
+            </a>
+            {% elif m.subject == 'Notification Alert' %}
+            <div class="pl-3 mb-1 lowstk" id="tadded">
+                <h6>{{m.subject}}</h6>
+                <span>{{m.text}}</span>
+                <span class="text-danger text-right tablecounts">{{m.stock_count}}</span>
+                <br>
+                <span class="text-secondary">{{m.date}}</span>
+            </div>
+            {% else %}
+            <div class="pl-3 mb-1 lowstk" id="tadded">
+                <h6>{{m.subject}}</h6>
+                <span>{{m.text}}</span>
+                <span class="text-danger text-right tablecounts">{{m.stock_count}}</span>
+                <br>
+                <span class="text-secondary">{{m.date}}</span>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>

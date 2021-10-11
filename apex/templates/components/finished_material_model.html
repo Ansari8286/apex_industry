@@ -1,0 +1,66 @@
+<!-- fm add entry modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Enter Entry Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <table>
+                <form action="" url="{% url 'Raw_Material_Save' %}" method="post" id="fm_form"
+                    style="width: 80%;" class=" justify-content-center">
+                    {% csrf_token %}
+                    <div class="mb-2"><input class="form-control" type="date" max="{{date}}" name="Date"
+                            id="fm_date" required placeholder="Enter Date"></div>
+                    <div class="mb-2">
+                        <select class="form-control" name="Coil_ID" id="rm_id" required
+                            placeholder="Select RM Coil ID">
+                            <option value="select" selected disabled>Select</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><input class="form-control" type="text" name="Coil Size" id="rm_size"
+                            required placeholder="Enter RM Size (inxin)" disabled></div>
+                    <div class="mb-2">
+                        <select class="form-control" name="Coil_grade" id="rm_grade" required
+                            placeholder="Select RM Grade">
+                            <option value="select" selected disabled>Select</option>
+                            <option value="202Q">202Q</option>
+                            <option value="304Q">304Q</option>
+                            <option value="316Q">316Q</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="Coil Weight"
+                            id="rm_weight" required placeholder="Enter RM Weight (kg)"></div>
+                    <div class="mb-2">
+                        <select class="form-control" name="FM-Type" id="fm_type" required
+                                placeholder="Select FM Type">
+                                <option value="select" selected disabled>Select</option>
+                                <option value="Square">Square</option>
+                                <option value="Round">Round</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="FM Thickness"id="fm_thickness" required placeholder="Enter FM Thickness (mm)"></div>
+                    <div class="mb-2"><input class="form-control" type="text" name="FM Size" id="fm_size"required placeholder="Enter FM Size (inxin)"></div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="FM Weight"id="fm_weight" required placeholder="Enter FM Weight (kg)"></div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="FM Quantity"id="fm_quantity" required placeholder="Enter FM Quantity (pcs)"></div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="FM ScrapeWeight"id="fm_scrapeweight" required placeholder="Enter FM Scrape Weight (kg)"></div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="UF Thickness"id="ufm_thickness" required placeholder="Enter UFM Thickness (mm)"></div>
+                    <div class="mb-2"><input class="form-control" type="text" name="UF Size" id="ufm_size"required placeholder="Enter UFM Size (inxin)"></div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="UF Weight"id="ufm_weight" required placeholder="Enter UFM Weight (kg)"></div>
+                    <div class="mb-2"><input class="form-control" type="number" min="0" name="UF Quantity"id="ufm_quantity" required placeholder="Enter UFM Quantity (pcs)"></div>
+                </form>
+            </table>
+            <div id="msg"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <input type="button"class="p-2 float-right btn btn-sm btn-primary border rounded-left rounded-right text-uppercase"id="btnsave_fm" value="Add Entry">
+        </div>
+    </div>
+</div>
+</div>
+<!-- fm add entry modal -->

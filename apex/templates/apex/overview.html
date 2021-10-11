@@ -1,0 +1,155 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block main %}
+
+<!-- {{ rm_chart|json_script:"rm_chart" }}
+{{ fm_chart|json_script:"fm_chart" }}
+{{ es_chart|json_script:"es_chart" }} -->
+
+{{ raw_material_weight_graph|json_script:"raw_material_weight_graph" }}
+{{ raw_material_scrap_graph|json_script:"raw_material_scrap_graph" }}
+{{ finished_material_weight_graph|json_script:"finished_material_weight_graph" }}
+{{ finished_material_scrap_graph|json_script:"finished_material_scrap_graph" }}
+{{ finished_material_quantity_graph|json_script:"finished_material_quantity_graph" }}
+{{ essential_items_graph|json_script:"essential_items_graph" }}
+{{ essential_use_graph|json_script:"essential_use_graph" }}
+{{ sale_graph|json_script:"sale_graph" }}
+<!-- line charts -->
+<div class="card-deck mb-4">
+
+    <div class="card">
+        <div class="card-body p-2 text-center" id="no_data_rm_o">
+            <h5>Raw Material Monthly Data</h5>
+            <!-- <div id="mydiv1"></div> -->
+            <canvas id="speedChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-2 text-center" id="no_data_fm_o">
+            <h5>Finished Material Monthly Data</h5>
+            <!-- <div id="mydiv1"></div> -->
+            <canvas id="speedChart1"></canvas>
+        </div>
+    </div>
+
+</div>
+<!-- line charts -->
+
+<!-- Other Charts -->
+<div class="card-deck mt-4">
+
+    <div class="card">
+        <div class="card-body p-2 text-center">
+            <h5>Essential Material Stock Flow</h5>
+            <main id="no_data_es_o">
+                <canvas id="myBar"></canvas>
+            </main>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-2 text-center">
+            <h5>Finished Material Sales Flow</h5>
+            <main id="no_data_fmf_o">
+                <canvas id="myMixChart"></canvas>
+            </main>
+        </div>
+    </div>
+
+</div>
+<!-- Other Charts -->
+
+<br>
+
+
+<!-- flex before table  -->
+
+<div class="d-flex">
+    <div class="mr-auto p-2 text-center">
+        <h2 class="over-scrape">Scrape Material Data</h2>
+
+    </div>
+</div>
+
+
+<!-- Table -->
+
+<div class="row">
+
+
+    <p>
+    </p>
+
+    <div class="col-md">
+        <div class="card card-body table-responsive">
+            <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                <!-- <form action="" method="get"> -->
+                <div class="btn-group m-2">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-start log ">
+            
+                            
+                            <div class="form-group searchInput">
+                                <!-- <label>Search</label> -->
+                                <input type="search"  class="form-control" id="filterbox-scrap" placeholder="Search">
+                            </div>
+                            
+                            <div class="align-items-center ml-2">
+            
+                                <!-- <button -->
+                                <!-- class=" p-2 float-right btn one-btn border rounded-left rounded-right" -->
+                                <!-- type="submit"> Search -->
+                                <!-- </button> -->
+                            </div>
+                        </div>
+                    </div>
+                        <!-- </button> -->
+                        
+                </div>
+                <!-- <div id="msg"></div> -->
+                <!-- </form> -->
+                    
+            </div>
+            <table class="table table-striped" id="scrap_filter">
+                <thead>
+                <tr class="order-pie">
+                    <th class="text-center">Scrape ID</th>
+                    <th class="text-center">Scrape Type</th>
+                    <th class="text-center">RM ID</th>
+                    <th class="text-center">Weight (kg)</th>
+                    <th class="text-center">Date</th>
+                    
+                </tr>
+                </thead>
+                <tbody id="tbodyscrap">
+                {% for s in scrap_t %}
+                    <tr>
+                        <td class="text-center">{{s.id}}</td>
+                        <td class="text-center">{{s.S_Type}}</td>
+                        <td class="text-center order-pie">{{s.t_id}}</td>
+                        <td class="text-center order-pie">{{s.s_weight}}</td>
+                        <td class="text-center order-pie">{{s.S_date}}</td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block script %}
+
+<script src="{% static 'javascript/overview/Barchart.js' %}"></script>
+<script src="{% static 'javascript/overview/Piechart.js' %}"></script> 
+
+{% endblock %}

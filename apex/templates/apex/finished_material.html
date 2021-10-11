@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load crispy_forms_filters %}
+
+{% block main %}
+{{ fm_quantity_graph|json_script:"fm_quantity_graph" }}
+{{ sale_quantity_graph|json_script:"sale_quantity_graph" }}
+<!-- main content -->
+<!-- Tabs navs -->
+<ul class="nav nav-tabs flex-sm-row flex-column text-center nav-pills mb-3" id="ex1" role="tablist">
+    <li class="nav-item mr-2" role="presentation">
+        <a class="nav-link  tabs-link px-4 active w-100" data-toggle="tab" href="#1" role="tab" aria-controls="ex1-tabs-1"
+            aria-selected="true" style="font-size: 1.2em;">Stocks</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link tabs-link px-4 " data-toggle="tab" href="#2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false"
+            style="font-size: 1.2em;">Sales Data</a>
+    </li>
+
+</ul>
+<!-- Tabs navs -->
+<!-- Tabs Content -->
+<div class="tab-content" id="ex1-content">
+    <div class="tab-pane fade show active" id="1" role="tabpanel" aria-labelledby="ex1-tab-1">
+        <div class="card-deck">
+
+            <div class="card col-lg-5">
+                <div class="card-body">
+                    <h5 class="mb-5">Finished Material Stock Data</h5>
+                    <div class="chart-container pt-md-5 pb-0 pt-lg-5" id="no_data_fm">
+                        <canvas id="fmbar"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+            {% if request.user.is_staff %}
+            <div class="card col-lg-7">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between">
+                            <h5 class="card-title col-lg-3 text-center text-sm-left pl-0">Log Details </h5>
+                            <!-- filters -->
+                            <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                                <form action="" method="get">
+                                <div class="btn-group m-2">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-start log flex-sm-row flex-column">
+                                            
+                                            <div class="form-group searchInput">
+                                                <!-- <label>Search</label> -->
+                                                <input type="search"  class="form-control" id="filterbox-fm-log" placeholder="Search">
+                                            </div>                                                                  
+                                        </div>
+                                    </div>
+                                        <!-- </button> -->
+                                        
+                                </div>
+                                </form>
+                                    
+                            </div>
+                            <!-- filters -->
+                        </div>
+                    </div>
+                    <!-- log table -->
+                    <div class="table-responsive scroll" >
+                        <table class="table table-striped" id="fm_log">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Operation</th>
+                                    <th scope="col">FM ID</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for l in log %}
+                                <tr>
+                                    <th scope="row">{{l.id}}</th>
+                                    <td>{{l.Username}}</td>
+                                    <td>{{l.CRUDoperation}}</td>
+                                    <td>{{l.Table_id}}</td>
+                                    <td>{{l.Log_Date}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- log table -->
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- send notification -->
+        <div class="card col-lg-8">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title ">Send Notification</h5>
+                </div>
+                <form method="post" id="notification-form">
+                    <div id="send-notification d-flex">
+                        <div class="row">
+                            <div class="my-3 col-6">
+                                <input type="text" name="" id="p_name" value="FM Stock" hidden>
+                                <input class="form-control" type="text" name="p_size" id="p_size" placeholder="Subject">
+                            </div>
+                            <div class="my-3 col-6">
+                                <input class="form-control" type="text" name="p_thickness" id="p_thickness" placeholder="Operation Request">
+                            </div>
+                        </div>
+                        <div class="my-3">
+                            <textarea class="form-control" rows="9" cols="12" name="q_order" id="q_order"
+                                placeholder="Reason for Request Access"></textarea>
+                        </div>
+                        <div class="my-3 text-left">
+                            <input class="p-2 px-4 btn one-btn border rounded-left rounded-right text-uppercase"
+                                type="button" value="Send" id="btn-noti">
+                            <div id="msg-n"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- current stock -->
+    <div class="d-flex">
+        <div class="mr-auto p-2">
+            <h2 class="heading">Current Stock</h2>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-12" id="finished_col">
+<!-- <div class="card col-lg-8">
+    <div class="card-body">
+        <div class="table-responsive"> -->
+            <div class="card card-body table-responsive">
+                <!-- filters -->               
+                <div class="d-flex justify-content-start align-items-center flex-sm-row mb-2">
+                    <form action="" method="get">
+                        <div class="btn-group m-2">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-start log ">
+                                    <!-- {{ fmstockfilter.form| crispy}} -->
+                                    <div class="form-group searchInput">
+                                        <!-- <label>Search</label> -->
+                                        <input type="search"  class="form-control" id="filterbox-fm" placeholder="Search">
+                                    </div>    
+                                </div>
+                            </div>
+                            <!-- </button> -->
+                        </div>
+                        <div id="msg"></div>
+                    </form>
+                    <!-- DateFilter -->
+                    <form action="" method="get">
+                    
+                        <div class="d-flex m-2">
+                            {{fmstockfilter.form}}
+                            <input
+                                class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right
+                                text-uppercase prevented serach"
+                                type="submit"
+                                value="Search">
+                        </div>
+                    
+                    </form>
+                    <!-- DateFilter -->
+                    <div class="d-flex m-3 mb-2">
+                        {% if role == 'In-Active' %}
+                            <input type="button"
+                            class=" align-items-end p-2 float-right btn btn-sm two-btn border rounded-left rounded-right text-uppercase"
+                            value="Add Entry" data-toggle="modal" data-target="#exampleModalCenter" disabled>
+                        {% else %}
+                            <input type="button"
+                            class=" align-items-end p-2 float-right btn btn-sm two-btn border rounded-left rounded-right text-uppercase"
+                            value="Add Entry" data-toggle="modal" data-target="#exampleModalCenter">
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- filters -->
+                
+                <!-- tables -->
+                <table class="table table-striped text-center" id="finished_table">
+                    <thead>
+                        <tr>
+                            <th scope="col">FM ID</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Register ID</th>
+                            <th scope="col">Coil ID</th>
+                            <th scope="col">Coil Size (inxin)</th>
+                            <th scope="col">Coil Grade</th>
+                            <th scope="col">Coil Weight (kg)</th>
+                            <th scope="col">Material Type</th>
+                            <th scope="col">FM Thickness (mm)</th>
+                            <th scope="col">FM Size (inxin)</th>
+                            <th scope="col">FM Weight (kg)</th>
+                            <th scope="col">FM Quantity (pcs)</th>
+                            <th scope="col">FM ScrapWeight (kg)</th>
+                            <th scope="col">UF Thickness (mm)</th>
+                            <th scope="col">UF Size (inxin)</th>
+                            <th scope="col">UF Weight (kg)</th>
+                            <th scope="col">UF Quantity (pcs)</th>
+                            <th scope="col">Operations</th>
+                        </tr>
+
+                    </thead>
+                    <tbody id="tbody_fm">
+                        {% for d in fm_stock %}
+
+                        <tr>
+                            <td scope="col">{{d.id}}</td>
+                            <td scope="col">{{d.FM_Date}}</td>
+                            <td scope="col">{{d.register.first_name}}</td>
+                            <td scope="col">{{d.coilUID_id}}</td>
+                            <td scope="col">{{d.Size}}</td>
+                            <td scope="col">{{d.Grade}}</td>
+                            <td scope="col">{{d.coilWeight}}</td>
+                            <td scope="col">{{d.materialType}}</td>
+                            <td scope="col">{{d.FM_Thickness}}</td>
+                            <td scope="col">{{d.FM_Size}}</td>
+                            <td scope="col">{{d.FM_Weight}}</td>
+                            <td scope="col">{{d.FM_Quantity}}</td>
+                            <td scope="col">{{d.FM_scrapWeight}}</td>
+                            <td scope="col">{{d.UF_Thickness}}</td>
+                            <td scope="col">{{d.UF_Size}}</td>
+                            <td scope="col">{{d.UF_Weight}}</td>
+                            <td scope="col">{{d.UF_Quantity}}</td>
+                            <td class="text-center d-flex justify-content-around">
+                                {% if role == 'Active' %}
+                                {% if delete_access == "Yes" %}
+                                    <a class="btn three-btn btn-sm btn-del-fm " title="delet" data-sid="{{d.id}}" id="del">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                {% else %}
+                                
+                                    <a class="btn three-btn btn-sm btn-del-fm disabled" title="delet" data-sid="{{d.id}}" id="del">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                {% endif %}
+                                {% else %}
+                                <a class="btn three-btn btn-sm btn-del-fm disabled" title="delet" data-sid="{{d.id}}" id="del">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Tables -->
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Sales Tab -->
+<div class="tab-pane fade" id="2" role="tabpanel" aria-labelledby="ex1-tab-2">
+
+    <div class="d-flex justify-content-start">
+        <div class="p-2 mt-2">
+                <h2 class="heading">Sales
+                </h2>
+        </div>
+        <div class="justify-content-start p-2" id="msg-sales"></div>
+    </div>
+    <hr />
+
+    <div class="row">
+
+        <div class="col-md">
+
+            <div class="card card-body table-responsive">
+                <!-- filters -->               
+                <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                    <form action="" method="get">
+                    <div class="btn-group m-2">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-start log ">
+
+                                <!-- {{ fmsale.form| crispy}} -->
+                                
+                                
+                                <div class="form-group searchInput">
+                                    <!-- <label>Search</label> -->
+                                    <input type="search"  class="form-control" id="filterbox-fm-sales" placeholder="Search">
+                                </div>      
+                            </div>
+                        </div>
+                            <!-- </button> -->
+                            
+                    </div>
+                    <!-- <div id="msg"></div> -->
+                </form>
+                <!-- DateFilter -->
+                <!-- <form action="" method="get">
+                
+                    <div class="d-flex m-2">
+                        {{fmsale.form}}
+                        <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase" type="submit"
+                            value="Search">
+                    </div>
+                
+                </form> -->
+                <!-- DateFilter -->
+                        
+                </div>
+                <!-- filters -->
+
+
+                <!-- tables -->
+                <table class="table table-striped" id="finished_table_sales" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Sale ID</th>
+                            <th>Register ID</th>
+                            <th style="width: 110px;">Sold To</th>
+                            <th style="width: 90px;">FM ID</th>
+                            <th>Date</th>
+                            <th style="width: 120px;">Type</th>
+                            <th>Quantity (pcs)</th>
+                            <th>Weight (kg)</th>
+                        </tr>
+                        <tr>
+                            <form method="post" url = {% url 'Finished_Material_Sale_Save' %} id="sale-form">
+                                {% csrf_token %}
+                                <!-- <td></td> -->
+                                <td>Sale ID</td>
+                                <td>Register ID</td>
+                                {% if delete_access == 'No' or role == 'In-Active' %}
+                                    <td><input class="form-control" type="text"  id="sale_sold" required disabled></td>
+                                    <td>
+                                        <select class="form-control" name="Sale ID" id="sfm_id" required disabled>
+                                            <option value="select" selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td><input class="form-control" type="date" name="Date" id="sale_date" required
+                                            disabled></td>
+                                    <td><input class="form-control" type="text" name="" id="s_m_type" required value="" disabled></td>
+                                    <td><input class="form-control" type="number" min="0" id="sale_quantity" required disabled></td>
+                                    <td><input class="form-control" type="number" min="0" id="sale_weight" required disabled></td>
+                                    <td>
+                                        <input
+                                            class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                                            type="button" value="Add Entry" id="btnsave-sale" disabled>
+                                    </td>
+                                {% else %}
+                                    <td><input class="form-control col-12" type="text"  id="sale_sold" required></td>
+                                    <td>
+                                        <select class="form-control" name="Sale ID" id="sfm_id" required>
+                                            <option value="select" selected disabled>Select</option>
+                                            
+                                            <!-- <option value="{{ds.id}}">{{ds.id}}455455dsv</option> -->
+                                            
+                                        </select>
+                                    </td>
+                                    <td><input class="form-control" type="date" max="{{date}}" name="Date" id="sale_date" required></td>
+                                    <td><input class="form-control" type="text" name="" id="s_m_type" required value="" disabled></td>
+                                    <td><input class="form-control" type="number" min="0" id="sale_quantity" required></td>
+                                    <td><input class="form-control" type="number" min="0" id="sale_weight" required></td>
+                                    <td>
+                                        <input
+                                            class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                                            type="button" value="Add Entry" id="btnsave-sale">
+                                    </td>
+                                {% endif %}
+
+                            </form>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tbody-sale">
+                        {% for d in fm_sale %}
+                        <tr>
+                            <td>{{d.id}}</td>
+                            <td>{{d.register_id}}</td>
+                            <td>{{d.To}}</td>
+                            <td>{{d.FMcoilUID_id}}</td>
+                            <td>{{d.Sale_date}}</td>
+                            <td>{{d.Sale_Type}}</td>
+                            <td>{{d.Sale_Quantity}}</td>
+                            <td>{{d.Sale_Weight}}</td>
+
+                            <td class='text-center d-flex justify-content-around'>
+                                {% if delete_access == 'No' or role == 'In-Active' %}
+                                <a class='btn three-btn btn-sm btn-del-salefm disabled' title='delet' data-sid="{{d.id}}">
+                                    <i class='fa fa-trash'></i>
+                                {% else %}
+                                <!-- <th>Action</th> -->
+                                <a class='btn three-btn btn-sm btn-del-salefm' title='delet' data-sid="{{d.id}}">
+                                    <i class='fa fa-trash'></i>
+                                {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</div>
+<!-- Tabs Content -->
+
+<!-- main content -->
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{% static '/javascript/finished_material/finished_material_graph.js'%}"></script> 
+ 
+
+{% endblock %}

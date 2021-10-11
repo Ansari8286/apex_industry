@@ -1,0 +1,392 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load crispy_forms_filters %}
+
+{% block main %}
+{{ ufm_quantity_graph|json_script:"ufm_quantity_graph" }}
+{{ sale_quantity_graph|json_script:"sale_quantity_graph" }}
+<!-- main content -->
+<!-- Tabs navs -->
+<ul class="nav nav-tabs flex-column flex-sm-row text-center nav-pills mb-3" id="ex1" role="tablist">
+    <li class="nav-item mr-2" role="presentation">
+        <a class="nav-link  tabs-link px-4 active w-100" data-toggle="tab" href="#1" role="tab" aria-controls="ex1-tabs-1"
+            aria-selected="true" style="font-size: 1.2em;">Stocks</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link tabs-link px-4 " data-toggle="tab" href="#2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false"
+            style="font-size: 1.2em;">Sales Data</a>
+    </li>
+
+</ul>
+<!-- Tabs navs -->
+<!-- Tabs Content -->
+<div class="tab-content" id="ex1-content">
+    <div class="tab-pane fade show active" id="1" role="tabpanel" aria-labelledby="ex1-tab-1">
+        <div class="card-deck">
+
+            <div class="card col-lg-5">
+                <div class="card-body">
+                    <h5 class="mb-5">Unfinished Material Stock Data</h5>
+                    <div class="chart-container pt-md-5 pt-lg-5" id="no_data_uf">
+                        <canvas id="ufmbar"></canvas>
+                    </div>
+                </div>
+            </div>
+            {% if request.user.is_staff %}
+            <div class="card col-lg-7">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div class="d-flex align-items-center flex-column flex-sm-row justify-content-between">
+                            <h5 class="card-title col-lg-3 text-center text-sm-left pl-0">Log Details </h5>
+                            <!-- filters -->
+                            <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                                <form action="" method="get">
+                                <div class="btn-group m-2">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-start log flex-sm-row flex-column">
+
+                                    <!-- {{ logtablefilter.form| crispy}} -->
+                                    
+                                    
+                                    <div class="form-group searchInput">
+                                        <!-- <label>Search</label> -->
+                                        <input type="search"  class="form-control" id="filterbox-ufm-log" placeholder="Search">
+                                    </div>                                              
+                                </div>
+                            </div>
+                                <!-- </button> -->
+                                
+                        </div>
+                        </form>
+                            
+                    </div>
+                    <!-- filters -->
+                        </div>
+                        <!-- log table -->
+                        <div class="table-responsive scroll">
+                            <table class="table table-striped" id="ufm_log">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Operation</th>
+                                        <th scope="col">Table ID</th>
+                                        <th scope="col">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for l in log %}
+                                    <tr>
+                                        <th scope="row">{{l.id}}</th>
+                                        <td>{{l.Username}}</td>
+                                        <td>{{l.CRUDoperation}}</td>
+                                        <td>{{l.Table_id}}</td>
+                                        <td>{{l.Log_Date}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- log table -->
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- send notification -->
+            <div class="card col-lg-8">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <h5 class="card-title ">Send Notification</h5>
+                        
+                    </div>
+                    <form method="post" id="notification-form">
+                        <div id="send-notification d-flex">
+                            <div class="row">
+                                <div class="my-3 col-6">
+                                    <input type="text" name="" id="p_name" value="UFM Stock" hidden>
+                                    <input class="form-control" type="text" name="p_size" id="p_size" placeholder="Subject">
+                                </div>
+                                <div class="my-3 col-6">
+                                    <input class="form-control" type="text" name="p_thickness" id="p_thickness" placeholder="Operation Request">
+                                </div>
+                            </div>
+                            <div class="my-3">
+                                <textarea class="form-control" rows="9" cols="12" name="q_order" id="q_order"
+                                    placeholder="Reason for Request Access"></textarea>
+                            </div>
+                            <div class="my-3 text-left">
+                                <input class="p-2 px-4 btn one-btn border rounded-left rounded-right text-uppercase"
+                                        type="button" value="Send" id="btn-noti">
+                                <div id="msg-n"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- current stock -->
+        <div class="d-flex justify-content-start">
+            <div class="p-2 mt-2">
+                    <h2 class="heading">Current Stock
+                    </h2>
+            </div>
+            <div class="justify-content-start p-2" id="msg-ufm"></div>
+        </div>
+        <hr />
+
+        <div class="row">
+
+            <div class="col-md">
+
+                <div class="card card-body table-responsive">
+                        <!-- filters -->               
+                <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                    <form action="" method="get">
+                    <div class="btn-group m-2">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-start log ">
+
+                                <!-- {{ UFfilter.form| crispy}} -->
+                                
+                                <div class="form-group searchInput">
+                                    <!-- <label>Search</label> -->
+                                    <input type="search"  class="form-control" id="filterbox-ufm" placeholder="Search">
+                                </div>                                   
+                            </div>
+                        </div>
+                            <!-- </button> -->
+                            
+                    </div>
+                    <!-- <div id="msg"></div> -->
+                    </form>
+
+                    <!-- DateFilter -->
+                    <form action="" method="get">
+                    
+                        <div class="d-flex m-2">
+                            {{UFfilter.form}}
+                            <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase serach" type="submit" value="Search">
+                        </div>
+                    
+                    </form>
+                    <!-- DateFilter -->
+                        
+                </div>
+                <!-- filters -->
+
+                    <!-- tables -->
+                    <table class="table table-striped" id="unfinished_table">
+                        <thead>
+                            <tr>
+                                <th scope="col">UFM ID</th>
+                                <th scope="col">Register ID</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">FM ID</th>
+                                <th scope="col">Material Type</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Weight</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyufm"> 
+                            {% for d in ufm_data %}
+                            <tr>
+                                <td scope="col">{{d.id}}</td>
+                                <td scope="col">{{d.register.first_name}}</td>
+                                <td scope="col">{{d.UFM_date}}</td>
+                                <td scope="col">{{d.FMid}}</td>
+                                <td scope="col">{{d.UFM_type}}</td>
+                                <td scope="col">{{d.UFM_Quantity}}</td>
+                                <td scope="col">{{d.UFM_Weight}}</td>
+                                <td class="text-center d-flex justify-content-around">
+                                {% if delete_access == 'No' or role == 'In-Active' %}
+                                    <a class="btn three-btn btn-sm btn-del-ufm disabled" title='delet' data-sid="{{d.id}}"
+                                        id="del">
+                                        <i class="fa fa-trash"></i>
+                                    {% else %}
+                                    <a class="btn three-btn btn-sm btn-del-ufm" title='delet' data-sid="{{d.id}}"
+                                        id="del">
+                                        <i class="fa fa-trash"></i>
+                                    {% endif %}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Tables -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Sales Tab -->
+    <div class="tab-pane fade" id="2" role="tabpanel" aria-labelledby="ex1-tab-2">
+
+        <div class="d-flex justify-content-start">
+            <div class="p-2 mt-2">
+                    <h2 class="heading">Sales
+                    </h2>
+            </div>
+            <div class="justify-content-start p-2" id="msg-usales"></div>
+    </div>
+        <hr />
+
+        <div class="row">
+
+            <div class="col-md">
+
+                <div class="card card-body table-responsive">
+                    <!-- filters -->               
+                    <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                        <form action="" method="get">
+                        <div class="btn-group m-2">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-start log ">
+
+                                    <!-- {{ Ufsale.form| crispy}} -->
+                                    
+                                    
+                                    <div class="form-group searchInput">
+                                        <!-- <label>Search</label> -->
+                                        <input type="search"  class="form-control" id="filterbox-ufm-sales" placeholder="Search">
+                                    </div>                                    
+                                </div>
+                            </div>
+                                <!-- </button> -->
+                                
+                        </div>
+                        <!-- <div id="msg"></div> -->
+                        </form>
+                        <!-- DateFilter -->
+                        <!-- <form action="" method="get">
+                        
+                            <div class="d-flex m-2">
+                                {{Ufsale.form}}
+                                <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase" type="submit"
+                                    value="Search">
+                            </div>
+                        
+                        </form> -->
+                        <!-- DateFilter -->
+                    </div>
+                    <!-- filters -->
+
+                    <!-- tables -->
+                    <table class="table table-striped" id="unfinished_table_sales">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Sale ID</th>
+                                <th style="width: 80px;">Register ID</th>
+                                <th style="width: 160px;">Sold To</th>
+                                <th style="width: 100px;">UFM ID</th>
+                                <th style="width: 80px !important;">Date</th>
+                                <th style="width: 120px;">Material Type</th>
+                                <th>Quantity(pcs)</th>
+                                <th>Weight(kg)</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                <form method="post" url={% url 'UnFinished_Material_Sale_Save' %} id="usale-form">
+                                    {% csrf_token %}
+                                <td>Sale ID</td>
+                                <td>Register ID</td>
+                                {% if  role == 'In-Active' %}
+                                <td><input class="form-control" type="text" id="usale_sold" required disabled></td>
+
+                                <td>
+                                    <!-- <input class="form-control" type="number" min="0" name="Sale ID" id="usfm_id" required> -->
+                                    <select class="form-control" name="Sale ID" id="usfm_id" required disabled>
+                                        <option value="select" selected disabled>Select</option>
+                                    </select>
+                                </td>
+
+                                <td><input class="form-control" type="date" name="Date" id="usale_date"
+                                        style="width: 167px !important;" required disabled></td>
+                                <td><input class="form-control" type="text" name="" id="us_m_type" required value="" disabled></td>
+                                <td><input class="form-control" type="number" min="0" id="usale_quantity" required disabled></td>
+                                <td><input class="form-control" type="number" min="0" id="usale_weight" required disabled></td>
+                                <td>
+                                    <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                                    type="button" value="Add Entry" id="btnsave-usale" disabled>
+                                </td>
+                                {% else %}
+                                <td><input class="form-control" type="text" id="usale_sold" required ></td>
+                                <td>
+                                    <!-- <input class="form-control" type="number" min="0" name="Sale ID" id="usfm_id" required> -->
+                                    <select class="form-control" name="Sale ID" id="usfm_id" required>
+                                        <option value="select" selected disabled>Select</option>
+                                        
+                                    </select>
+                                
+                                </td>
+
+                                <td><input class="form-control" type="date" max="{{date}}" name="Date" id="usale_date" required
+                                        style="width: 167px !important;"></td>
+                                <td><input class="form-control" type="text" name="" id="us_m_type" required value="" disabled></td>
+                                <td><input class="form-control" type="number" min="0" id="usale_quantity" required ></td>
+                                <td><input class="form-control" type="number" min="0" id="usale_weight" required ></td>
+                                <td>
+                                    <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase "
+                                    type="button" value="Add Entry" id="btnsave-usale">
+                                </td>
+                                {% endif %}
+                                
+                            </form>
+                            </tr>
+                        </thead>
+                        
+                        <tbody id="tbody-usale">
+                            {% for d in ufm_sale_data %}
+                            <tr>
+                                <td>{{d.id}}</td>
+                                <td>{{d.register_id}}</td>
+                                <td>{{d.To}}</td>
+                                <td>{{d.UFcoilID}}</td>
+                                <td>{{d.Sale_date}}</td>
+                                <td>{{d.Sale_Type}}</td>
+                                <td>{{d.Sale_Quantity}}</td>
+                                <td>{{d.Sale_Weight}}</td>
+                                <td class='text-center d-flex justify-content-around'>
+                                
+                                {% if role == 'Active' %}
+                                    {% if delete_access == "Yes" %}
+                                    <a class='btn three-btn btn-sm btn-del-usale' title='delet' data-sid="{{d.id}}">
+                                        <i class='fa fa-trash'></i>
+                                    </a>
+                                    {% else %}
+                                    <a class='btn three-btn btn-sm btn-del-usale disabled' title='delet' data-sid="{{d.id}}">
+                                        <i class='fa fa-trash'></i>
+                                    </a>
+                                    {% endif %}
+                                    {% else %}
+                                <a class='btn three-btn btn-sm btn-del-usale disabled' title='delet' data-sid="{{d.id}}">
+                                    <i class='fa fa-trash'></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Tabs Content -->
+
+<!-- main content -->
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static '/javascript/unfinished_material/unfinished_material_graph.js'%}"></script> 
+
+{% endblock %}

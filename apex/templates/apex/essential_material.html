@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load crispy_forms_filters %}
+{% block main %}
+<!-- main content -->
+<!-- Tabs navs -->
+{{ essential_data_graph|json_script:"essential_data_graph" }}
+
+<ul class="nav nav-tabs flex-column flex-sm-row text-center nav-pills mb-3" id="ex1" role="tablist">
+  <li class="nav-item mr-2" role="presentation">
+    <a class="nav-link  tabs-link px-4 active w-100" data-toggle="tab" href="#1" role="tab" aria-controls="ex1-tabs-1"
+      aria-selected="true" style="font-size: 1.2em;">Stocks</a>
+  </li>
+  <li class="nav-item" role="presentation" id='tabesid'>
+    <a class="nav-link tabs-link px-4 " data-toggle="tab" href="#2" role="tab" aria-controls="ex1-tabs-2"
+      aria-selected="false" style="font-size: 1.2em;" id="tabesid">Usage Data</a>
+  </li>
+
+</ul>
+<!-- Tabs navs -->
+<!-- Tabs Content -->
+<div class="tab-content" id="ex1-content">
+  <div class="tab-pane fade show active" id="1" role="tabpanel" aria-labelledby="ex1-tab-1">
+    <div class="card-deck">
+
+      <div class="card col-lg-5">
+        <div class="card-body">
+          <h5 class="mb-5">Essential Material Stock Data</h5>
+          <div class="chart-container pt-md-5 pt-lg-5" id="no_data_em">
+            <canvas id="embar"></canvas>
+          </div>
+        </div>
+      </div>
+
+      {% if request.user.is_staff %}
+      <div class="card col-lg-7">
+        <div class="card-body">
+          <div class="table-responsive">
+            <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row">
+              <h5 class="card-title col-lg-3 text-center text-sm-left pl-0">Log Details </h5>
+              <!-- filters -->
+              <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                <form action="" method="get">
+                  <div class="btn-group m-2">
+                    <div class="d-flex justify-content-between">
+                      <div class="d-flex justify-content-start log flex-sm-row flex-column">
+
+                        <!-- {{ logtablefilter.form| crispy}} -->
+
+                        <div class="form-group searchInput">
+                          <!-- <label>Search</label> -->
+                          <input type="search" class="form-control" id="filterbox-es-log" placeholder="Search">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- </button> -->
+
+                  </div>
+                </form>
+
+              </div>
+              <!-- filters -->
+            </div>
+            <!-- log table -->
+            <div class="table-responsive scroll">
+              <table class="table table-striped" id="es_log">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Operation</th>
+                    <th scope="col">Table ID</th>
+                    <th scope="col">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for l in log %}
+                  <tr>
+                    <th scope="row">{{l.id}}</th>
+                    <td>{{l.Username}}</td>
+                    <td>{{l.CRUDoperation}}</td>
+                    <td>{{l.Table_id}}</td>
+                    <td>{{l.Log_Date}}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- log table -->
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <!-- send notification -->
+      <div class="card col-lg-8">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <h5 class="card-title ">Send Notification</h5>
+          </div>
+          <form method="post" id="notification-form">
+            <div id="send-notification d-flex">
+              <div class="row">
+                <div class="my-3 col-6">
+                  <input type="text" name="" id="p_name" value="ES Stock" hidden>
+                  <input class="form-control" type="text" name="p_size" id="p_size" placeholder="Subject">
+                </div>
+                <div class="my-3 col-6">
+                  <input class="form-control" type="text" name="p_thickness" id="p_thickness"
+                    placeholder="Operation Request">
+                </div>
+              </div>
+              <div class="my-3">
+                <textarea class="form-control" rows="9" cols="12" name="q_order" id="q_order"
+                  placeholder="Reason for Request Access"></textarea>
+              </div>
+              <div class="my-3 text-left">
+                <input class="p-2 px-4 btn one-btn border rounded-left rounded-right text-uppercase" type="button"
+                  value="Send" id="btn-noti">
+                <div id="msg-n"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- current stock -->
+    <div class="d-flex justify-content-start">
+      <div class="p-2 mt-2">
+        <h2 class="heading">Current Stock</h2>
+      </div>
+      <div class="justify-content-start p-2" id="msg-es"></div>
+    </div>
+    <hr />
+
+    <div class="row">
+
+      <div class="col-md">
+
+        <div class="card card-body table-responsive">
+          <!-- filters -->
+          <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+            <form action="" method="get">
+              <div class="btn-group m-2">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-start log ">
+
+                    <!-- {{ emfilter.form| crispy}} -->
+
+
+                    <div class="form-group searchInput">
+                      <!-- <label>Search</label> -->
+                      <input type="search" class="form-control" id="filterbox-es" placeholder="Search">
+                    </div>
+                  </div>
+                </div>
+                <!-- </button> -->
+
+              </div>
+            </form>
+            <!-- DateFilter -->
+            <form action="" method="get">
+
+              <div class="d-flex m-2">
+                {{emfilter.form}}
+                <input
+                  class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase serach"
+                  type="submit" value="Search">
+              </div>
+
+            </form>
+            <!-- DateFilter -->
+          </div>
+          <!-- filters -->
+
+          <!-- tables -->
+          <table class="table table-striped" id="es_table">
+            <thead>
+              <tr>
+
+                <th scope="col">ES ID</th>
+                <th scope="col">Register ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Type</th>
+                <th scope="col">Quantity (pcs)</th>
+                <th>Size (inxin)</th>
+
+              </tr>
+              <tr>
+                <form method="post" id="post-form-es">
+                  {% csrf_token %}
+                  <td>ES ID</td>
+                  <td>Register ID</td>
+                  {% if role == "In-Active" %}
+                  <td><input class="form-control" type="date" name="date" id="es_date" required disabled></td>
+                  <td>
+                    <select class="form-control" name="type" id="es_type" required disabled>
+                      <option value="select" selected disabled>Select</option>
+                      <option value="Cylinder">Cylinder</option>
+                      <option value="Belt">Belt</option>
+                      <option value="Fevil">Fevil</option>
+                      <option value="Cutting Oil">Cutting Oil</option>
+                      <option value="Cutter">Cutter</option>
+                      <option value="Polish Wheel">Polish Wheel</option>
+                      <option value="Matt Wheel">Matt Wheel</option>
+                      <option value="Buff">Buff</option>
+                      <option value="Plastic Roll">Plastic Roll</option>
+                      <option value="Conjunction Rod">Conjunction Rod</option>
+                      <option value="Powder Box">Powder Box</option>
+                      <option value="Big Carton">Big Carton</option>
+                      <option value="Small Plastic">Small Plastic</option>
+
+
+                    </select>
+                  </td>
+                  <td><input class="form-control" type="number" min="0" name="quantity" id="es_quantity" required
+                      disabled></td>
+                  <td>
+                    <input class="form-control" type="text" name="size" id="es_size" required disabled>
+                  </td>
+                  <td>
+                    <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                      type="button" value="Add Entry" id="btnsave-es" disabled>
+                    <!-- <span><i class="fas fa-plus"></i></span><span class="ml-2">add entry</span>  -->
+                  </td>
+                  {% else %}
+                  <td><input class="form-control" type="date" max="{{date}}" name="date" id="es_date" required></td>
+                  <td>
+                    <select class="form-control" name="type" id="es_type" required>
+                      <option value="select" selected disabled>Select</option>
+                      <option value="Cylinder">Cylinder</option>
+                      <option value="Belt">Belt</option>
+                      <option value="Fevil">Fevil</option>
+                      <option value="Cutting Oil">Cutting Oil</option>
+                      <option value="Cutter">Cutter</option>
+                      <option value="Polish Wheel">Polish Wheel</option>
+                      <option value="Matt Wheel">Matt Wheel</option>
+                      <option value="Buff">Buff</option>
+                      <option value="Plastic Roll">Plastic Roll</option>
+                      <option value="Conjunction Rod">Conjunction Rod</option>
+                      <option value="Powder Box">Powder Box</option>
+                      <option value="Big Carton">Big Carton</option>
+                      <option value="Small Plastic">Small Plastic</option>
+
+
+                    </select>
+                  </td>
+                  <td><input class="form-control" type="number" min="0" name="quantity" id="es_quantity" required></td>
+                  <td>
+                    <input class="form-control" type="text" name="size" id="es_size" required>
+                  </td>
+                  <td>
+                    <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                      type="button" value="Add Entry" id="btnsave-es">
+                    <!-- <span><i class="fas fa-plus"></i></span><span class="ml-2">add entry</span>  -->
+                  </td>
+                  {% endif %}
+                </form>
+              </tr>
+            </thead>
+            <tbody id="tbody-es">
+              {% for d in essential_data %}
+              <tr>
+                <td scope="col">{{d.id}}</td>
+                <td scope="col">{{d.register_id}}</td>
+                <td scope="col">{{d.ES_Date}}</td>
+                <td scope="col">{{d.Type}}</td>
+                <td scope="col">{{d.ES_Quantity}}</td>
+                <td scope="col">{{d.ES_Size}}</td>
+                <td class='text-center d-flex justify-content-around'>
+                  {% if role == 'Active' %}
+                  {% if delete_access == "Yes" %}
+                  <a class='btn three-btn btn-sm btn-del-es' title='delet' data-sid="{{d.id}}">
+                    <i class='fa fa-trash'></i>
+                  </a>
+                  {% else %}
+                  <a class='btn three-btn btn-sm btn-del-es disabled' title='delet' data-sid="{{d.id}}">
+                    <i class='fa fa-trash'></i>
+                  </a>
+                  {% endif %}
+                  {% else %}
+                  <a class='btn three-btn btn-sm btn-del-es disabled' title='delet' data-sid="{{d.id}}">
+                    <i class='fa fa-trash'></i>
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <script>
+              {% comment %} $('.btn-del-es').on("click", function () {
+                console.log('button selected')
+                let id = $(this).attr("data-sid");
+                let csr = $("input[name=csrfmiddlewaretoken").val();
+                console.log(id)
+                mydata = { sid: id, csrfmiddlewaretoken: csr };
+                mythis = this;
+
+                const essential_delete = (data) => {
+                  if (data.status == 1) {
+                    $("#toast3_id").html(alert_msg('Success!', 'Entry Deleted', 'toast-div-danger'))
+                    $(mythis).closest("tr").fadeOut();
+                  }
+                }
+                common_ajax_call(url = 'es_delete', data = mydata, method_type = "POST", essential_delete)
+              }) {% endcomment %}
+            </script>
+
+          </table>
+          <!-- Tables -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Usage Tab -->
+  <div class="tab-pane fade" id="2" role="tabpanel" aria-labelledby="ex1-tab-2">
+
+    <div class="d-flex justify-content-start">
+      <div class="p-2 mt-2">
+        <h2 class="heading">Usage
+        </h2>
+      </div>
+      <div class="justify-content-start p-2" id="msg-upd"></div>
+    </div>
+    <hr />
+
+    <!-- dropdowns -->
+    <div class="row">
+
+      <div class="col-md">
+
+        <div class="card card-body table-responsive">
+          <!-- filters -->
+          <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+            <form action="" method="get">
+              <div class="btn-group m-2">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-start log ">
+
+                    <!-- {{ usage.form| crispy}} -->
+
+
+                    <div class="form-group searchInput">
+                      <!-- <label>Search</label> -->
+                      <input type="search" class="form-control" id="filterbox-es-usage" placeholder="Search">
+                    </div>
+                  </div>
+                </div>
+                <!-- </button> -->
+
+              </div>
+            </form>
+            <div id="msg"></div>
+            <!-- DateFilter -->
+            <!-- <form action="" method="get">
+                                        
+                                                <div class="d-flex m-2">
+                                                        {{usage.form}}
+                                                        <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                                                                type="submit" value="Search">
+                                                </div>
+                                        
+                                        </form> -->
+            <!-- DateFilter -->
+          </div>
+          <!-- filters -->
+
+          <!-- tables -->
+          <table class="table table-striped" id="es_table_usage">
+            <thead>
+              <tr>
+                <th style="width: 60px;">ID</th>
+                <th style="width: 60px;">Register ID</th>
+                <th>Date</th>
+                <th style="width: 120px;">ES ID</th>
+                <th style="width: 120px;">Type</th>
+                <th style="width: 120px;">Quantity (pcs)</th>
+                <th style="width: 120px;">Size (inxin)</th>
+                <th style="width: 120px;">Operations</th>
+              </tr>
+              <tr>
+                <form method="post" id="post-form-upd">
+                  {% csrf_token %}
+                  <td> ID</td>
+                  <td>Register ID</td>
+                  {% if delete_access == 'No' or role == 'In-Active' %}
+                  <td><input class="form-control" type="date" name="date" id="upd_date" required disabled"></td>
+                  <td>
+                    <!-- <input class="form-control" type="number" name="id" id="upd_id" required> -->
+                    <select class="form-control" name="id" id="upd_id" required disabled>
+                      <option value="select" selected disabled>Select</option>
+                      {% for d in data %}
+                      <!-- <option value="{{d.id}}">{{d.id}}</option> -->
+                      {% endfor %}
+                    </select>
+
+                  </td>
+                  <td>
+                    <select class="form-control" name="type" id="upd_type" required disabled>
+                      <option value="select" selected disabled>Select</option>
+                      <!-- <option value="Cylinder">Cylinder</option>
+                                                                                <option value="Belt">Belt</option>
+                                                                                <option value="Fevil">Fevil</option>
+                                                                                <option value="Cutting Oil">Cutting Oil</option>
+                                                                                <option value="Cutter">Cutter</option>
+                                                                                <option value="Polish Wheel">Polish Wheel</option>
+                                                                                <option value="Matt Wheel">Matt Wheel</option>
+                                                                                <option value="Buff">Buff</option>
+                                                                                <option value="Plastic Roll">Plastic Roll</option>
+                                                                                <option value="Conjunction Rod">Conjunction Rod</option>
+                                                                                <option value="Powder Box">Powder Box</option>
+                                                                                <option value="Big Carton">Big Carton</option>
+                                                                                <option value="Small Plastic">Small Plastic</option>  -->
+                    </select>
+                  </td>
+                  <td><input class="form-control" type="number" min="0" id="upd_quantity" required disabled></td>
+                  <td><input class="form-control" type="text" id="upd_size" required disabled value=""></td>
+                  <td>
+                    <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                      type="button" value="Add Entry" id="btnsave-upd" disabled>
+                  </td>
+                  {% else %}
+                  <td><input class="form-control" type="date" max="{{date}}" name="date" id="upd_date" required></td>
+                  <td>
+                    <!-- <input class="form-control" type="number" name="id" id="upd_id" required> -->
+                    <select class="form-control" name="id" id="upd_id" required">
+                      <option value="select" selected disabled>Select</option>
+                    </select>
+
+                  </td>
+                  <td>
+                    <select class="form-control" name="type" id="upd_type" required">
+                      <option value="select" selected disabled>Select</option>
+                    </select>
+                  </td>
+                  <td><input class="form-control" type="number" min="0" id="upd_quantity" required></td>
+                  <td><input class="form-control" type="text" id="upd_size" required disabled value=""></td>
+                  <td>
+                    <input class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase"
+                      type="button" value="Add Entry" id="btnsave-upd">
+                  </td>
+                  {% endif %}
+                </form>
+              </tr>
+            </thead>
+
+            <tbody id="tbody-upd">
+              {% for d in essential_usage %}
+              <tr>
+                <td>{{d.id}}</td>
+                <td>{{d.register.first_name}}</td>
+                <td>{{d.EPD_Date}}</td>
+                <td>{{d.EPD_UID_id}}</td>
+                <td>{{d.EPD_Type}}</td>
+                <td>{{d.EPD_Quantity}}</td>
+                <td>{{d.EPD_Size}}</td>
+
+                <td class='text-center d-flex justify-content-around'>
+                  {% if delete_access == 'No' or role == 'In-Active' %}
+                  <a class='btn three-btn btn-sm btn-del-upd disabled' title='delet' data-sid="{{d.id}}">
+                    <i class='fa fa-trash'></i>
+                  </a>
+                  {% else %}
+                  <a class='btn three-btn btn-sm btn-del-upd' title='delet' data-sid="{{d.id}}">
+                    <i class='fa fa-trash'></i>
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+<!-- Tabs Content -->
+
+<!-- main content -->
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static '/javascript/essential_material/essential_material_graph.js'%}"></script>
+<script src="{% static '/javascript/essential_material/essential_usage.js'%}"></script>
+<script src="{% static '/javascript/essential_material/essential_material.js'%}"></script>
+<script>
+  a = $(".pagination")
+  a.addClass("justify-content-center");
+</script>
+{% endblock %}

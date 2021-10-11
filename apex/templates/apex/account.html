@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_filters %}
+
+{% load static %}
+
+
+{% block main %}
+<!-- main content -->
+<!-- Tabs navs -->
+
+<ul class="nav nav-tabs flex-column flex-sm-row text-center nav-pills mb-3" id="ex1" role="tablist">
+    <li class="nav-item mr-2" role="presentation">
+        <a class="nav-link tabs-link px-4  active w-100" data-toggle="tab" href="#1" role="tab" aria-controls="ex1-tabs-1"
+            aria-selected="true" style="font-size: 1.2em;">My Account</a>
+    </li>
+    {% if request.user.is_staff %}
+    <li class="nav-item mr-2" role="presentation">
+        <a class="nav-link tabs-link px-4 " data-toggle="tab" href="#2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false"
+            style="font-size: 1.2em;">Employee Account</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link tabs-link px-4 " data-toggle="tab" href="#3" role="tab" aria-controls="ex1-tabs-3" aria-selected="false"
+            style="font-size: 1.2em;">Deleted Records</a>
+    </li>
+    {% endif %}
+
+</ul>
+<!-- Tabs navs -->
+
+<div class="tab-content" id="ex1-content">
+    <div class="tab-pane fade show active" id="1" role="tabpanel" aria-labelledby="ex1-tab-1">
+        <!-- profile -->
+        <div class="container rounded bg-white mt-5">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="d-flex flex-column align-items-center text-center p-3">
+                        <img class="rounded-circle img-thumbnail mt-5" src="{% static '/images/profile.png' %}" width="100">
+        
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="p-1 py-5">
+                        <div id="msg"></div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom">
+                            <div class="d-flex flex-row align-items-center ">
+                                <h2 class="mr-2">Personal Information</h2>
+                                <div id="msg-user"></div>
+                            </div>
+        
+                        </div>
+                        <form action="" method="post" id="user-form">
+                            {% csrf_token %}
+                        
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <label for="first_name">First Name</label>
+                                <input type="text" class="form-control" placeholder="first name" value="{{data.First_Name}}" id="f_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" value="{{data.Last_Name}}" placeholder="{{data.Last_Name}}" id="l_name" required>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label for="email">User Name</label>
+                                <input type="text" class="form-control" placeholder="Email" value="{{data.UserName}}" id="email" required>
+                            </div>
+        
+                        </div>
+                        <!-- <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" placeholder="Username" value="john_doe12">
+                            </div>
+        
+                        </div> -->
+        
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label for="change_password">Change Password</label>
+                                <input type="password" class="form-control" name="password1" id="password1" required>
+                            </div>
+        
+                            <div class="col-md-6">
+                                <label for="enter_password">Re-enter Password</label>
+                                <input type="password" class="form-control" name="password2" id="password2" required>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-right">
+                            <input class="btn one-btn profile-button" type="button" id="btnsave-user" value="Update" data-sid="{{data.id}}">
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- profile -->
+        
+    </div>
+
+{% if request.user.is_staff %}
+    <!-- Employees Tab -->
+    <div class="tab-pane fade" id="2" role="tabpanel" aria-labelledby="ex1-tab-2">
+
+        <div class="d-flex justify-content-start">
+            <div class="p-2 mt-2">
+                    <h2 class="heading">Employees</h2>
+            </div>
+            <div class="justify-content-start p-2" id="msg-emp"></div>
+    </div>
+        <hr />
+
+        <div class="row">
+
+            <div class="col-md">
+
+                <div class="card card-body table-responsive">
+                    <div class="d-flex justify-content-between mb-2">
+                        <!-- filters -->               
+                        <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                            <form action="" method="get">
+                            <div class="btn-group m-2">
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-start log ">
+
+                                        <!-- {{ empfilter.form| crispy}} -->
+                                        
+                                        
+                                        <div class="form-group searchInput">
+                                            <!-- <label>Search</label> -->
+                                            <input type="search"  class="form-control" id="filterbox-emp-account" placeholder="Search Username">
+                                        </div>                                        
+                                        
+                                    </div>
+                                </div>
+                                    <!-- </button> -->
+                                    
+                            </div>
+                            <div id="msg"></div>
+                            </form>
+                                
+                        </div>
+                        <!-- filters -->
+                        <div class="d-flex justify-content-end flex-sm-row mt-1">
+                            <form method="post" id="post-form-timmer">
+                                <div class="btn-group m-2 mt-2 justify-content-end">
+                                    <span>Active Time:
+                                    <input type="time"class='form-control' id="a_time" placeholder="Active" value="{{a_time}}"></span>
+                                    <span class="ml-2">Inactive Time:
+                                    <input type="time" class = "form-control" id="d_time" placeholder="In-Active" value="{{d_time}}"></span>
+                                    <span class="mt-4">
+                                    <input class=" ml-2 p-1 px-2 float-right btn one-btn border rounded-left rounded-right" 
+                                                type="button" id="btnsave-timer" value="Submit"></span>
+                                </div>
+                            </form>
+                        <div id="msg_employee"></div>
+                    </div>
+
+                    </div>
+
+                    <!-- tables -->
+                    <table class="table table-striped" id="emp_account">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>User Name</th>
+                                <th>User Status</th>
+                                <th>User Role</th>
+                                <th>Delete Access</th>
+                                <th>Action</th>
+                                
+                            </tr>
+                        </thead>
+
+                        
+                        <tbody id="edit-employee">
+
+                            <form method="post" id="emp-form">
+                                {% csrf_token %}
+                            {% for d in all_user %}
+            
+                            <tr>
+                                <td>{{d.id}}</th>
+                                <td>{{d.First_Name}}</td>
+                                <td>{{d.Last_Name}}</td>
+                                <td>{{d.UserName}}</td>
+                                <td>
+                                    {% if d.UserName == 'Harish' %}
+                                    <select class="form-control" id="status_{{d.id}}" value ="Approved" disabled>
+                                        <option value="Approved" selected disabled>Approved</option>
+                                    </select>
+                                    {%else%}
+                                        {% if d.status == 'Approved' %}
+                                        <select class="form-control" id = "status_{{d.id}}">
+                                            <option value="Approved">Approved</option>
+                                            <option value="Pending">Pending</option>
+                                        </select>
+                                        {% else %}
+                                            <select class="form-control" id = "status_{{d.id}}">
+                                                <option value="Pending">Pending</option>
+                                                <option value="Approved">Approved</option>
+                                            </select>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>                           
+                                <td>
+                                    {% if d.UserName == 'Harish' %}
+                                    <select class="form-control" id="status_{{d.id}}" value="Active" disabled>
+                                        <option value="Active">Active</option>
+                                    </select>
+                                    {%else%}
+                                        {% if d.userRole == 'Active' %}
+                                            <select class="form-control" id = "role_{{d.id}}">
+                                                <option value="Active">Active</option>
+                                                <option value="In-Active">In-Active</option>
+                                            </select>
+                                        {% else %}
+                                            <select class="form-control" id = "role_{{d.id}}">
+                                                <option value="In-Active">In-Active</option>
+                                                <option value="Active">Active</option>
+                                            </select>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if d.UserName == 'Harish' %}
+                                    <select class="form-control" id="status_{{d.id}}" value="Yes" disabled>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                    {%else%}
+
+                                        {% if d.delete_access == 'Yes' %}
+                                            {% if  d.userRole == 'In-Active' %}
+                                            <select class="form-control" id = "del_{{d.id}}">
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                            {% else %}
+                                        <select class="form-control" id = "del_{{d.id}}">
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                            {% endif %}
+                                        {% else %}
+                                        <select class="form-control" id = "del_{{d.id}}">
+                                            <option value="No">No</option>
+                                            <option value="Yes">Yes</option>
+                                        </select>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                
+                                <td class="text-center">
+                                    {% if d.UserName == 'Harish' %}
+                                    
+                                    {% else %}
+                                    <input class="btn btn-sm one-btn profile-button btn-user-update"  type="button"
+                                        value="Update" data-sid="{{d.id}}">
+                                    <!-- <button class="btn btn-sm one-btn profile-button btn-edit-employee" data-sid="{{d.id}}"  type="button" data-toggle="modal" data-target="#updateModal">Update</button> -->
+                                    <a class="btn btn-sm three-btn btn-user-delete" data-sid="{{d.id}}"  title="delete">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            
+                            {% endfor %}
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+    
+    <!-- Deleted Records -->
+    <div class="tab-pane fade" id="3" role="tabpanel" aria-labelledby="ex1-tab-3">
+        <div class="card">
+            
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="d-flex align-items-center">
+                        <h5 class="card-title ">Log Details </h5>
+                    </div>
+                    <!-- log table -->
+                    <div class=" table-responsive">
+                        
+                        <!-- filters -->               
+                        <div class="d-flex justify-content-start flex-sm-row mb-2 ">
+                            <form action="" method="get">
+                            <div class="btn-group m-2">
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-start log ">
+
+                                        <!-- {{ dfilter.form| crispy}} -->
+                                        
+                                        
+                                        <div class="form-group searchInput">
+                                            <!-- <label>Search</label> -->
+                                            <input type="search"  class="form-control" id="filterbox-del-tables" placeholder="Search">
+                                        </div>                                     
+                                        
+                                    </div>
+                                </div>
+                                    <!-- </button> -->
+                                    
+                            </div>
+                            <div id="msg"></div>
+                            </form>
+                                
+                        </div>
+                        <!-- filters -->
+                        <table class="table table-striped" id="deleted_tables">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Material ID</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Quantity (pcs)</th>
+                                    <th scope="col">Size (inxin)</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Weight (kg)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in delete_tables %}
+                                <tr>
+                                    <th scope="row">{{t.id}}</th>
+                                    <td>{{t.material_id}}</td>
+                                    <td>{{t.date}}</td>
+                                    <td>{{t.quantity}}</td>
+                                    <td>{{t.size}}</td>
+                                    <td>{{t.type}}</td>
+                                    <td>{{t.weight}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- log table -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+<!-- Tabs Content -->
+
+<!-- main content -->
+{% endblock %}
+
+{% block script %}
+<script src="{% static '/javascript/accounts/employee_account.js'%}"></script>
+<script src="{% static '/javascript/accounts/update_account.js'%}"></script>
+<script>
+    a = $(".pagination")
+    a.addClass("justify-content-center");
+</script>
+{% endblock %}
