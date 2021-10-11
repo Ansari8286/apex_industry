@@ -6,5 +6,5 @@
 # chatworker: python manage.py runworker --settings=apexindustries.settings -v2
 # celery -A apexindustries beat -l info
 
-web: gunicorn apexindustries.wsgi
+web: gunicorn apexindustry.wsgi
 
