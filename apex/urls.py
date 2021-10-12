@@ -22,6 +22,7 @@ urlpatterns = [
     path('Raw-Material-Stock/',User_Raw_Material,name='user_raw_material'),
     path('Raw-Material-Stock/Raw_Material_Save',Raw_Material_Save,name='Raw_Material_Save'),
     path('Raw-Material-Stock/Raw_Material_Delete',Raw_Material_Delete,name='Raw_Material_Delete'),
+    path('raw_material_graph/',raw_material_graph,name='raw_material_graph'),
 
     # For finished material
     path('Finished-Material-Stock/',User_Finished_Material,name='user_finished_material'),

@@ -1,5 +1,7 @@
-var raw_material_coilweight_graph = JSON.parse(document.getElementById("raw_material_coilweight_graph").textContent);
+const rawMaterialGraph = (data=JSON.parse(document.getElementById("raw_material_coilweight_graph").textContent)) => { 
+const raw_material_coilweight_graph = data
 // raw_id = document.getElementById('raw_material_coilweight_graph')
+console.log(raw_material_coilweight_graph)
 var raw_dic = JSON.stringify(raw_material_coilweight_graph);
 // console.log(raw_dic);
 // RM Stock chart
@@ -40,3 +42,5 @@ var mychart = new Chart(donut, {
     }
 });
 }
+}
+rawMaterialGraph(data=JSON.parse(document.getElementById("raw_material_coilweight_graph").textContent))

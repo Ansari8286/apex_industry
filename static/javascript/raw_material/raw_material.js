@@ -113,8 +113,26 @@ $("#btnsave").click("#post-form", function () {
         }
       }
       common_ajax_call(url = 'Raw_Material_Save', data = raw_data, method_type="POST", raw_material_save)
+
+    //   const raw_material_graph = (data) => {
+    //     // const raw_material_coilweight_graph = JSON.parse(document.getElementById("raw_material_coilweight_graph").textContent);
+    //     raw_material_data = data.status
+    //     graph_data = JSON.parse(JSON.stringify(raw_material_data))
+    //     console.log(graph_data)
+    //     rawMaterialGraph(data=graph_data)
+    // }
+    // common_ajax_call(url = '/raw_material_graph', data = "response", method_type="GET", raw_material_graph)
   }
 });
+
+//#######################################################################################
+
+// $("#btnsave").on("click", function () {
+// const raw_material_graph = (data) => {
+//     console.log("success", data.status)
+// }
+// common_ajax_call(url = '/raw_material_graph', data = "response", method_type="GET", raw_material_graph)
+// });
 
 //#######################################################################
 

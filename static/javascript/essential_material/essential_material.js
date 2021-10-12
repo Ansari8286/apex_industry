@@ -39,10 +39,10 @@ $("#btnsave-es").click("#post-form-es", function () {
     }
     else {
         const essential_save = (data) => {
-            x = data.es_data;
+        let x = data.es_data;
         esId = x.slice(-1)[0]
-        
         $('#upd_id').append(`<option value="${esId.id}">${esId.id}</option>`);
+        
             if (data.status == "Save") {
                 for (i = 0; i < x.length; i++) {
                     output_uf +=`<tr>

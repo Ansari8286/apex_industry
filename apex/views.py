@@ -128,6 +128,7 @@ def Account(request):
 @login_required(login_url='login') # decorator for required login
 def User_Raw_Material(request):
     header = 'Raw Material Stock'
+
     # rendering all message in notfication modal in reverse order so the new message is always on top
     all_messages = Messages.objects.all().order_by("-id")
     # rendering last 5 messages for dropdown notification in reverse order
@@ -502,7 +503,6 @@ def Raw_Material_Delete(request):
         except:
             raw_material = rawMaterial.objects.get(id=raw_id)
             raw_material.delete()
-
         return JsonResponse({'status': 1})
     else:
         return JsonResponse({'status': 0})
@@ -984,3 +984,15 @@ def error_404(request, exception):
 def error_500(request):
         data = {}
         return render(request,'error404.html', data)
+
+def raw_material_graph(request):
+    if request.is_ajax and request.method == 'GET':
+        raw_material_data = rawMaterial.objects.values()
+        # extracting grade and coilweight from filtered data
+        raw_material_coilweight = extracting_data_for_graph.dictionary(dic=raw_material_data, key='RM_Grade', value='RM_coilWeight')
+        # dumping extracted data    
+        raw_material_coilweight_dict = json.dumps(raw_material_coilweight)
+        # laoding data
+        raw_material_coilweight_graph = json.loads(raw_material_coilweight_dict)
+    return JsonResponse({'status':raw_material_coilweight_graph})
+    
