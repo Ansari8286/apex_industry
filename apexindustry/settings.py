@@ -212,9 +212,9 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SELERLIZER = 'json'
 BROKER_URL = 'django://'
-# add by amjad
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseSheduler'
-CELERY_TIMEZONE = 'Asia/Kolkata'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseSheduler'# add by amjad
+CELERY_TIMEZONE = 'Asia/Kolkata'# add by amjad
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
