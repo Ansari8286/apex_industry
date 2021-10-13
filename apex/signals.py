@@ -55,18 +55,18 @@ def register(sender, instance, created, **kwargs):
             rg.userRole = 'In-Active'
             rg.save()
 #Channels Code start
-    else:
-        channel_layer = get_channel_layer()
-        data = {}
-        us = str(User.objects.get(username=instance.user).username)
-        data['delete_access'] = instance.delete_access
-        data['userRole'] = instance.userRole
-        async_to_sync(channel_layer.group_send)(
-            "room_%s" % us, {
-                'type': 'send_alert_user',
-                'value': json.dumps(data)
-            }
-        )
+    # else:
+    #     channel_layer = get_channel_layer()
+    #     data = {}
+    #     us = str(User.objects.get(username=instance.user).username)
+    #     data['delete_access'] = instance.delete_access
+    #     data['userRole'] = instance.userRole
+    #     async_to_sync(channel_layer.group_send)(
+    #         "room_%s" % us, {
+    #             'type': 'send_alert_user',
+    #             'value': json.dumps(data)
+    #         }
+    #     )
 #Channels Code end
 
 ############################################################
