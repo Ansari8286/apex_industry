@@ -46,7 +46,6 @@ django-dbbackup==3.3.0
 django-easy-pdf==0.1.1
 django-filter==2.4.0
 django-heroku==0.3.1
-django-redis==5.0.0
 django-storages==1.11.1
 django-tables2==2.3.4
 django-timezone-field==4.1.2
