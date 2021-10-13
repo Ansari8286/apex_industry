@@ -196,15 +196,15 @@ STATIC_ROOT = os.path.join(BASE_DIR,"staticfiles")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BROKER_URL = os.environ['REDIS_URL']
 # CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
-# CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
-CELERY_RESULT_BACKEND = 'django-db' #add by amjad
+CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
+# CELERY_RESULT_BACKEND = 'django-db' #add by amjad
 # CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SELERLIZER = 'json'
 BROKER_URL = 'django://'
 
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseSheduler'# add by amjad
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseSheduler'# add by amjad
 CELERY_TIMEZONE = 'Asia/Kolkata'# add by amjad
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
