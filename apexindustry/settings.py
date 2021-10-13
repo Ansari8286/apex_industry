@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)lg)s=^4*xt$xyt=v84&6+m0qi&54y)$3ip)sk@#b&+86b6)b#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = ['apexindustry.herokuapp.com']
 ALLOWED_HOSTS = ['*']
@@ -112,7 +112,7 @@ DATABASES = {
 # }
 
 
-db_from_env = dj_database_url.config()
+db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 
 CHANNEL_LAYERS = {
@@ -203,14 +203,18 @@ STATIC_ROOT = os.path.join(BASE_DIR,"staticfiles")
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# CELERY_BROKER_URL = os.environ['REDIS_URL']
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = os.environ['REDIS_URL']
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 # CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'django-db' #add by amjad
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SELERLIZER = 'json'
 BROKER_URL = 'django://'
+# add by amjad
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseSheduler'
+CELERY_TIMEZONE = 'Asia/Kolkata'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
