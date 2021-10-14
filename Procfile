@@ -1,4 +1,4 @@
-release: python manage.py migrate
+# release: python manage.py migrate
 # chatworker: python manage.py runworker --settings=apexindustry.settings -v2
 
 # web: daphne apexindustry.asgi:application

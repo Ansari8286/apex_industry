@@ -10,7 +10,7 @@ from django_celery_beat.models import PeriodicTask, PeriodicTasks, IntervalSched
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('user_raw_material')
+            return redirect('raw_material')
         else:
             return view_func(request,*args, **kwargs)
     return wrapper_func
@@ -32,7 +32,7 @@ def allowed_users(allowed_roles=[]):
             if group in allowed_roles:
                 return view_func(request, *args, **kwargs)
             else:
-                return redirect('user_raw_material')
+                return redirect('raw_material')
         return wrapper_func
     return decorator
 
