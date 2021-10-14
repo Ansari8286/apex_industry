@@ -48,6 +48,14 @@ $("#btnsaveuf").click("#uf-form", function () {
                 }
         }
         common_ajax_call(url = 'Unfinished_Material_Save', data = uf_data, method_type="POST", unfinished_material_save)
+        const unFinished_material_graph = (data) => {
+            ufm_quantity_data = data.ufm_quantity_graph
+            ufm_sale_quantity_data = data.ufm_sale_quantity_graph
+            ufmQuantityGraph = JSON.parse(JSON.stringify(ufm_quantity_data))
+            ufmSaleQuantityGraph = JSON.parse(JSON.stringify(ufm_sale_quantity_data))
+            updateUnFinishedMaterialGraph(ufmSaleQuantityGraph, ufmQuantityGraph) 
+        }
+        common_ajax_call(url = '/unfinished_material_graph', data = "response", method_type="GET", unFinished_material_graph)
     }
 })
 
@@ -65,4 +73,12 @@ $('#tbodyufm').on("click", '.btn-del-ufm', function () {
         }
     }
     common_ajax_call(url = 'Unfinished_Material_Delete', data = mydata, method_type="POST", unfinished_material_Delete)
+    const unFinished_material_graph_delete = (data) => {
+        ufm_quantity_data = data.ufm_quantity_graph
+        ufm_sale_quantity_data = data.ufm_sale_quantity_graph
+        ufmQuantityGraph = JSON.parse(JSON.stringify(ufm_quantity_data))
+        ufmSaleQuantityGraph = JSON.parse(JSON.stringify(ufm_sale_quantity_data))
+        updateUnFinishedMaterialGraph(ufmSaleQuantityGraph, ufmQuantityGraph) 
+    }
+    common_ajax_call(url = '/unfinished_material_graph', data = "response", method_type="GET", unFinished_material_graph_delete)
 })

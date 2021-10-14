@@ -1,12 +1,12 @@
 var essential_data_graph = JSON.parse(document.getElementById("essential_data_graph").textContent);
 
 // console.log(essential_data_graph,'asdnkjasdksadkjas')
-var dic_c = JSON.stringify(essential_data_graph);
-if (dic_c == '{}') {
-    document.getElementById("no_data_em").innerHTML = "<br><div class='alert alert-light lead'><strong>Note:</strong> No Data Available</div>";
-}
+// var dic_c = JSON.stringify(essential_data_graph);
+// if (dic_c == '{}') {
+//     document.getElementById("no_data_em").innerHTML = "<br><div class='alert alert-light lead'><strong>Note:</strong> No Data Available</div>";
+// }
 
-else {
+// else {
 
     // EM Stock Chart
     var ctx = document.getElementById("embar");
@@ -32,4 +32,11 @@ else {
             }
         }
     });
+const updateEssentialMaterialGraph = (essentialDataGraph) => {
+    myChart.data.datasets[0].data = [essentialDataGraph['Cylinder'], essentialDataGraph['Belt'], essentialDataGraph['Fevil'], essentialDataGraph['Cutting Oil'],
+                                    essentialDataGraph['Cutter'], essentialDataGraph['Polish Wheel'], essentialDataGraph['Matt Wheel'], essentialDataGraph['Buff'],
+                                    essentialDataGraph['Plastic Roll'], essentialDataGraph['Conjunction Rod'], essentialDataGraph['Powder Box'],
+                                    essentialDataGraph['Big Carton'], essentialDataGraph['Small Plastic']];
+    myChart.update();
 }
+// }

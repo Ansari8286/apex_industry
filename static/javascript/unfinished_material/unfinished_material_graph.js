@@ -4,10 +4,10 @@ var sale_quantity_graph = JSON.parse(document.getElementById("sale_quantity_grap
 var dic_q = JSON.stringify(ufm_quantity_graph);
 var dic_s = JSON.stringify(sale_quantity_graph);
 
-if (dic_q == '{}' && dic_s == "{}"){
-  document.getElementById("no_data_uf").innerHTML = "<br><div class='alert alert-light lead'><strong>Note:</strong> No Data Available</div>";
-}
-else{
+// if (dic_q == '{}' && dic_s == "{}"){
+//   document.getElementById("no_data_uf").innerHTML = "<br><div class='alert alert-light lead'><strong>Note:</strong> No Data Available</div>";
+// }
+// else{
 // FM Stock Chart
 
 var barChartData = {
@@ -41,12 +41,17 @@ var barChartData = {
     maintainAspectRatio: "false",
   }
   
-  window.onload = function() {
+  // window.onload = function() {
     var ctx = document.getElementById("ufmbar").getContext("2d");
-    window.myBar = new Chart(ctx, {
+    let myBar = new Chart(ctx, {
       type: "bar",
       data: barChartData,
       options: chartOptions
     });
-  };
+  // };
+// }
+const updateUnFinishedMaterialGraph = (ufmSaleQuantityGraph, ufmQuantityGraph) => {
+  myBar.data.datasets[0].data = [ufmSaleQuantityGraph['Round'], ufmSaleQuantityGraph['Square']];
+  myBar.data.datasets[1].data = [ufmQuantityGraph['Round'], ufmQuantityGraph['Square']];
+  myBar.update();
 }

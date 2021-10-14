@@ -32,7 +32,7 @@ aria-hidden="true">
             </a>
             {% else %}
             {% if m.subject == 'Raw Material Alert' %}
-            <a class="notif-link" href="{% url 'user_raw_material' %}">
+            <a class="notif-link" href="{% url 'raw_material' %}">
                 <div class="pl-3 mb-1 lowstk" id="tadded">
                     <h6>{{m.subject}}</h6>
                     <span>{{m.text}}</span>
@@ -42,7 +42,7 @@ aria-hidden="true">
                 </div>
             </a>
             {% elif m.subject == 'Essential Stock Alert' %}
-            <a class="notif-link" href="{% url 'user_essential_material' %}">
+            <a class="notif-link" href="{% url 'essential_material' %}">
                 <div class="pl-3 mb-1 lowstk" id="tadded">
                     <h6>{{m.subject}}</h6>
                     <span>{{m.text}}</span>
@@ -52,7 +52,7 @@ aria-hidden="true">
                 </div>
             </a>
             {% elif m.subject == 'Finish Material Alert' %}
-            <a class="notif-link" href="{% url 'user_finished_material' %}">
+            <a class="notif-link" href="{% url 'finished_material' %}">
                 <div class="pl-3 mb-1 lowstk" id="tadded">
                     <h6>{{m.subject}}</h6>
                     <span>{{m.text}}</span>

@@ -22,6 +22,7 @@ var liveToastBtn = document.getElementById("liveToastBtn");
 
 $("#btnsave").click("#post-form", function () {
   output = "";
+  // clearGraphdata()
   let raw_material_date = $("#raw_date").val();
   let raw_material_thickness = $("#raw_thickness").val();
   let raw_material_size = $("#raw_size").val();
@@ -30,7 +31,13 @@ $("#btnsave").click("#post-form", function () {
   let raw_material_scrapweight = $("#S_Weight").val();
   let raw_material_vendor = $("#raw_vendor").val();
   let csrf = $("input[name=csrfmiddlewaretoken").val();
-
+  
+  // // donut_graph.setTransform(1, 0, 0, 1, 0, 0);
+  // donut_graph.clearRect(0, 0, canvas.width, canvas.height);
+  // donut_graph.restore();
+  // // donut_graph.clearRect(0, 0, donut_graph.canvas.width, donut_graph.canvas.height);
+  // // donut_graph.beginPath();
+  
   raw_data = {
     raw_material_date: raw_material_date,
     raw_material_thickness: raw_material_thickness,
@@ -102,6 +109,7 @@ $("#btnsave").click("#post-form", function () {
             $("#S_Weight").val("");
             $("#raw_vendor").val("");
             $("#tbody").html(output);
+            
             // setInterval(() => {
             //   location.reload();
             // }, 2000);
@@ -114,14 +122,12 @@ $("#btnsave").click("#post-form", function () {
       }
       common_ajax_call(url = 'Raw_Material_Save', data = raw_data, method_type="POST", raw_material_save)
 
-    //   const raw_material_graph = (data) => {
-    //     // const raw_material_coilweight_graph = JSON.parse(document.getElementById("raw_material_coilweight_graph").textContent);
-    //     raw_material_data = data.status
-    //     graph_data = JSON.parse(JSON.stringify(raw_material_data))
-    //     console.log(graph_data)
-    //     rawMaterialGraph(data=graph_data)
-    // }
-    // common_ajax_call(url = '/raw_material_graph', data = "response", method_type="GET", raw_material_graph)
+      const raw_material_graph = (data) => {
+        raw_material_data = data.status
+        graph_data = JSON.parse(JSON.stringify(raw_material_data))
+        updateRawMaterialGraph(graph_data) 
+    }
+    common_ajax_call(url = '/raw_material_graph', data = "response", method_type="GET", raw_material_graph)
   }
 });
 
@@ -151,4 +157,10 @@ $("#tbody").on("click", ".btn-del", function () {
     }
   }
   common_ajax_call(url = 'Raw_Material_Delete', data = mydata, method_type="POST", raw_material_delete)
+  const raw_material_graph = (data) => {
+    raw_material_data = data.status
+    graph_data = JSON.parse(JSON.stringify(raw_material_data))
+    updateRawMaterialGraph(graph_data) 
+}
+common_ajax_call(url = '/raw_material_graph', data = "response", method_type="GET", raw_material_graph)
 });

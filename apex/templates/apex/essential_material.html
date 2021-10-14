@@ -126,7 +126,6 @@
       </div>
       {% endif %}
     </div>
-
     <!-- current stock -->
     <div class="d-flex justify-content-start">
       <div class="p-2 mt-2">
@@ -134,12 +133,9 @@
       </div>
       <div class="justify-content-start p-2" id="msg-es"></div>
     </div>
-    <hr />
-
+    <hr/>
     <div class="row">
-
       <div class="col-md">
-
         <div class="card card-body table-responsive">
           <!-- filters -->
           <div class="d-flex justify-content-start flex-sm-row mb-2 ">
@@ -147,10 +143,7 @@
               <div class="btn-group m-2">
                 <div class="d-flex justify-content-between">
                   <div class="d-flex justify-content-start log ">
-
                     <!-- {{ emfilter.form| crispy}} -->
-
-
                     <div class="form-group searchInput">
                       <!-- <label>Search</label> -->
                       <input type="search" class="form-control" id="filterbox-es" placeholder="Search">
@@ -158,36 +151,30 @@
                   </div>
                 </div>
                 <!-- </button> -->
-
               </div>
             </form>
             <!-- DateFilter -->
             <form action="" method="get">
-
               <div class="d-flex m-2">
                 {{emfilter.form}}
                 <input
                   class="p-2 float-right btn btn-sm one-btn border rounded-left rounded-right text-uppercase serach"
                   type="submit" value="Search">
               </div>
-
             </form>
             <!-- DateFilter -->
           </div>
           <!-- filters -->
-
           <!-- tables -->
           <table class="table table-striped" id="es_table">
             <thead>
               <tr>
-
                 <th scope="col">ES ID</th>
                 <th scope="col">Register ID</th>
                 <th scope="col">Date</th>
                 <th scope="col">Type</th>
                 <th scope="col">Quantity (pcs)</th>
                 <th>Size (inxin)</th>
-
               </tr>
               <tr>
                 <form method="post" id="post-form-es">
@@ -212,8 +199,6 @@
                       <option value="Powder Box">Powder Box</option>
                       <option value="Big Carton">Big Carton</option>
                       <option value="Small Plastic">Small Plastic</option>
-
-
                     </select>
                   </td>
                   <td><input class="form-control" type="number" min="0" name="quantity" id="es_quantity" required
@@ -244,8 +229,6 @@
                       <option value="Powder Box">Powder Box</option>
                       <option value="Big Carton">Big Carton</option>
                       <option value="Small Plastic">Small Plastic</option>
-
-
                     </select>
                   </td>
                   <td><input class="form-control" type="number" min="0" name="quantity" id="es_quantity" required></td>
@@ -290,34 +273,12 @@
               </tr>
               {% endfor %}
             </tbody>
-            <script>
-              {% comment %} $('.btn-del-es').on("click", function () {
-                console.log('button selected')
-                let id = $(this).attr("data-sid");
-                let csr = $("input[name=csrfmiddlewaretoken").val();
-                console.log(id)
-                mydata = { sid: id, csrfmiddlewaretoken: csr };
-                mythis = this;
-
-                const essential_delete = (data) => {
-                  if (data.status == 1) {
-                    $("#toast3_id").html(alert_msg('Success!', 'Entry Deleted', 'toast-div-danger'))
-                    $(mythis).closest("tr").fadeOut();
-                  }
-                }
-                common_ajax_call(url = 'es_delete', data = mydata, method_type = "POST", essential_delete)
-              }) {% endcomment %}
-            </script>
-
           </table>
           <!-- Tables -->
         </div>
       </div>
-
     </div>
   </div>
-
-
   <!-- Usage Tab -->
   <div class="tab-pane fade" id="2" role="tabpanel" aria-labelledby="ex1-tab-2">
 
@@ -405,18 +366,18 @@
                     <select class="form-control" name="type" id="upd_type" required disabled>
                       <option value="select" selected disabled>Select</option>
                       <!-- <option value="Cylinder">Cylinder</option>
-                                                                                <option value="Belt">Belt</option>
-                                                                                <option value="Fevil">Fevil</option>
-                                                                                <option value="Cutting Oil">Cutting Oil</option>
-                                                                                <option value="Cutter">Cutter</option>
-                                                                                <option value="Polish Wheel">Polish Wheel</option>
-                                                                                <option value="Matt Wheel">Matt Wheel</option>
-                                                                                <option value="Buff">Buff</option>
-                                                                                <option value="Plastic Roll">Plastic Roll</option>
-                                                                                <option value="Conjunction Rod">Conjunction Rod</option>
-                                                                                <option value="Powder Box">Powder Box</option>
-                                                                                <option value="Big Carton">Big Carton</option>
-                                                                                <option value="Small Plastic">Small Plastic</option>  -->
+                          <option value="Belt">Belt</option>
+                          <option value="Fevil">Fevil</option>
+                          <option value="Cutting Oil">Cutting Oil</option>
+                          <option value="Cutter">Cutter</option>
+                          <option value="Polish Wheel">Polish Wheel</option>
+                          <option value="Matt Wheel">Matt Wheel</option>
+                          <option value="Buff">Buff</option>
+                          <option value="Plastic Roll">Plastic Roll</option>
+                          <option value="Conjunction Rod">Conjunction Rod</option>
+                          <option value="Powder Box">Powder Box</option>
+                          <option value="Big Carton">Big Carton</option>
+                          <option value="Small Plastic">Small Plastic</option>  -->
                     </select>
                   </td>
                   <td><input class="form-control" type="number" min="0" id="upd_quantity" required disabled></td>

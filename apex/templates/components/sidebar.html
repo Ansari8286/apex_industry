@@ -5,10 +5,10 @@
         <h3><img src="{% static 'images/profile.png' %}" style="width: 50px; height: 50px;"></h3>
     </div>
 {% url 'admin_dashboard' as Dashboard %}
-{% url 'user_raw_material' as raw %}
-{% url 'user_finished_material' as FM %}
-{% url 'user_unfinished_material' as UF %}
-{% url 'user_essential_material' as EM %}
+{% url 'raw_material' as raw %}
+{% url 'finished_material' as FM %}
+{% url 'unfinished_material' as UF %}
+{% url 'essential_material' as EM %}
 {% url 'user_account' as U %}
 
     <ul class="list-unstyled components">
@@ -21,16 +21,16 @@
         </li>
         {% endif %}
         <li>
-            <a {% if request.path == raw %}  class="activeMenu" {% endif %} href="{% url 'user_raw_material' %}">Raw Material</a>
+            <a {% if request.path == raw %}  class="activeMenu" {% endif %} href="{% url 'raw_material' %}">Raw Material</a>
         </li>
         <li>
-            <a {% if request.path == FM %}  class="activeMenu" {% endif %}href="{% url 'user_finished_material' %}">Finished Material</a>
+            <a {% if request.path == FM %}  class="activeMenu" {% endif %}href="{% url 'finished_material' %}">Finished Material</a>
         </li>
         <li>
-            <a {% if request.path == UF %}  class="activeMenu" {% endif %}href="{% url 'user_unfinished_material' %}">Un-Finished Material</a>
+            <a {% if request.path == UF %}  class="activeMenu" {% endif %}href="{% url 'unfinished_material' %}">Un-Finished Material</a>
         </li>
         <li>
-            <a {% if request.path == EM %}  class="activeMenu" {% endif %} href="{% url 'user_essential_material' %}">Essential Items</a>
+            <a {% if request.path == EM %}  class="activeMenu" {% endif %} href="{% url 'essential_material' %}">Essential Items</a>
         </li>
         <li>
             <a {% if request.path == U %}  class="activeMenu" {% endif %} href="{% url 'user_account' %}">Account</a>

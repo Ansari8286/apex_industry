@@ -67,6 +67,12 @@ $("#btnsave-es").click("#post-form-es", function () {
             }
         }
         common_ajax_call(url = 'Essential_Item_Save', data = es_data, method_type = "POST", essential_save)
+        const essential_material_graph = (data) => {
+            essential_data = data.essential_data_graph
+            essentialDataGraph = JSON.parse(JSON.stringify(essential_data))
+            updateEssentialMaterialGraph(essentialDataGraph) 
+        }
+        common_ajax_call(url = '/essential_material_graph', data = "response", method_type="GET", essential_material_graph)
     }
 })
 
@@ -85,4 +91,10 @@ $('#tbody-es').on("click", ".btn-del-es", function () {
         }
     }
     common_ajax_call(url = 'Essential_Item_Delete', data = mydata, method_type = "POST", essentialDelete)
+    const essential_material_graph = (data) => {
+        essential_data = data.essential_data_graph
+        essentialDataGraph = JSON.parse(JSON.stringify(essential_data))
+        updateEssentialMaterialGraph(essentialDataGraph) 
+    }
+    common_ajax_call(url = '/essential_material_graph', data = "response", method_type="GET", essential_material_graph)
 })

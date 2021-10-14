@@ -1,7 +1,6 @@
 // this ajax file for finished material sale
 let Sale_Save = $("#sale-form").attr("url")
 const finished_material_id = (data) => {
-    console.log(data.data)
     const finished_material_id = data.data
     finished_material_id.map(item => {
         $('#sfm_id').append(`<option value="${item.id}">${item.id}</option>`);
@@ -50,7 +49,6 @@ $("#btnsave-sale").click("#sale-form", function () {
         csrfmiddlewaretoken: csr,
     };
     if (fmsale_id == '') {
-        // console.log('input')
         $("#toast2_id").html(alert_msg('Error!', 'Please input field', 'toast-div-danger'))
     } else if (sale_sold == '') {
         // $("#sale-form")[0].reset();
@@ -107,7 +105,6 @@ $("#btnsave-sale").click("#sale-form", function () {
 $('#tbody-sale').on("click", ".btn-del-salefm", function () {
     let id = $(this).attr("data-sid");
     let csr = $("input[name=csrfmiddlewaretoken").val();
-    console.log(id)
     mydata = { sid: id, csrfmiddlewaretoken: csr };
     mythis = this;
 

@@ -126,7 +126,7 @@ def Account(request):
 
 # Raw material page view
 @login_required(login_url='login') # decorator for required login
-def User_Raw_Material(request):
+def Raw_Material(request):
     header = 'Raw Material Stock'
 
     # rendering all message in notfication modal in reverse order so the new message is always on top
@@ -183,7 +183,7 @@ def User_Raw_Material(request):
 ########################################################################
 
 @login_required(login_url='login')# decorator for required login
-def User_UnFinished_Material(request):
+def UnFinished_Material(request):
     header = 'Un-Finished Material Stock'
     # rendering all message in notfication modal in reverse order so the new message is always on top
     all_messages = Messages.objects.all().order_by("-id")
@@ -251,7 +251,7 @@ def User_UnFinished_Material(request):
 
 #Finished Material View
 @login_required(login_url='login')
-def User_Finished_Material(request):
+def Finished_Material(request):
     header = 'Finished Material Stock'
     # rendering all message in notfication modal in reverse order so the new message is always on top
     all_messages = Messages.objects.all().order_by("-id")
@@ -322,7 +322,7 @@ def User_Finished_Material(request):
 # @unautherized_user
 # essential material page view
 @login_required(login_url='login')
-def User_Essential_Material(request):
+def Essential_Material(request):
     header = 'Essential Item Stock'
     # rendering all message in notfication modal in reverse order so the new message is always on top
     all_messages = Messages.objects.all().order_by("-id")
@@ -996,3 +996,45 @@ def raw_material_graph(request):
         raw_material_coilweight_graph = json.loads(raw_material_coilweight_dict)
     return JsonResponse({'status':raw_material_coilweight_graph})
     
+
+def finished_material_graph(request):
+    if request.is_ajax and request.method == 'GET':
+        fm_data = FMstock.objects.values()
+        sale_data = Sale.objects.filter(Stock__exact='Finished Material Stock').values()
+        # extracting quantity and type from filtered data
+        fm_quantity = extracting_data_for_graph.dictionary(dic=fm_data, key='materialType', value='FM_Quantity')
+        sale_quantity = extracting_data_for_graph.dictionary(dic=sale_data, key='Sale_Type', value='Sale_Quantity')
+        #dumps data in json
+        fm_quantity_dict = json.dumps(fm_quantity)
+        sale_quantity_dict = json.dumps(sale_quantity)
+        #loads data in json
+        fm_quantity_graph = json.loads(fm_quantity_dict)
+        sale_quantity_graph = json.loads(sale_quantity_dict)
+    return JsonResponse({'fm_quantity_graph':fm_quantity_graph, 'sale_quantity_graph':sale_quantity_graph})
+
+
+def essential_material_graph(request):
+    if request.is_ajax and request.method == 'GET':
+        # rendering total es data in graph 
+        essential = essentialitemStock.objects.values()
+        essential_data = extracting_data_for_graph.dictionary(dic=essential, key='Type', value='ES_Quantity')
+        # dumping json
+        essential_data_dict = json.dumps(essential_data)
+        #loading json
+        essential_data_graph = json.loads(essential_data_dict)
+    return JsonResponse({'essential_data_graph':essential_data_graph})
+
+def unfinished_material_graph(request):
+    if request.is_ajax and request.method == 'GET':
+        # rendering ufm data in graph
+        ufm_data = UFMstock.objects.values()
+        sale_data = Sale.objects.filter(Stock__exact='Un-Finished Material Stock').values()
+        # extracting grade and ufm type from filtered data
+        ufm_quantity = extracting_data_for_graph.dictionary(dic=ufm_data, key='UFM_type', value='UFM_Quantity')
+        # extracting grade and sale type from filtered data
+        sale_quantity = extracting_data_for_graph.dictionary(dic=sale_data, key='Sale_Type', value='Sale_Quantity')
+        ufm_quantity_dict = json.dumps(ufm_quantity)
+        sale_dict = json.dumps(sale_quantity)
+        ufm_quantity_graph = json.loads(ufm_quantity_dict)
+        ufm_sale_quantity_graph = json.loads(sale_dict)
+    return JsonResponse({'ufm_sale_quantity_graph':ufm_sale_quantity_graph, 'ufm_quantity_graph':ufm_quantity_graph})

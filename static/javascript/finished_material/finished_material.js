@@ -186,6 +186,14 @@ $("#btnsave_fm").click("#fm_form", function () {
       }
     }
     common_ajax_call(url = '/Finished_Material_Save', data = fm_data, method_type = "POST", finished_material_save)
+    const finished_material_graph = (data) => {
+      fm_quantity_data = data.fm_quantity_graph
+      sale_quantity_data = data.sale_quantity_graph
+      fmQuantityGraph = JSON.parse(JSON.stringify(fm_quantity_data))
+      saleQuantityGraph = JSON.parse(JSON.stringify(sale_quantity_data))
+      updateFinishedMaterialGraph(saleQuantityGraph, fmQuantityGraph) 
+  }
+  common_ajax_call(url = '/finished_material_graph', data = "response", method_type="GET", finished_material_graph)
   }
 });
 
@@ -206,4 +214,13 @@ $("#tbody_fm").on("click", ".btn-del-fm", function () {
   }
 }
 common_ajax_call(url = '/Finished_Material_Delete', data = mydata, method_type = "POST", finished_material_delete)
+const finished_material_graph = (data) => {
+  console.log(data);
+  fm_quantity_data = data.fm_quantity_graph
+  sale_quantity_data = data.sale_quantity_graph
+  fmQuantityGraph = JSON.parse(JSON.stringify(fm_quantity_data))
+  saleQuantityGraph = JSON.parse(JSON.stringify(sale_quantity_data))
+  updateFinishedMaterialGraph(saleQuantityGraph, fmQuantityGraph) 
+}
+common_ajax_call(url = '/finished_material_graph', data = "response", method_type="GET", finished_material_graph)
 });
