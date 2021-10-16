@@ -128,7 +128,6 @@ def Account(request):
 @login_required(login_url='login') # decorator for required login
 def Raw_Material(request):
     header = 'Raw Material Stock'
-
     # rendering all message in notfication modal in reverse order so the new message is always on top
     all_messages = Messages.objects.all().order_by("-id")
     # rendering last 5 messages for dropdown notification in reverse order
